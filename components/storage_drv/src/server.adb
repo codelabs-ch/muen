@@ -37,23 +37,21 @@ with Storage_Drv_Cspecs_Wrapper;
 use type Interfaces.Unsigned_32;
 use type Interfaces.Unsigned_64;
 
-with Storage_Interface;
-use Storage_Interface;
-
 package body Server
 is
+   use type Storage_Interface.Current_Request_Type;
 
-   Request_Channels_Size : constant := CSpecs.Blockdev_Request_Element_Count
-     * CSpecs.Blockdev_Request_Element_Size * 8;
+   Request_Channels_Size : constant := Storage_Interface.CSpecs.Blockdev_Request_Element_Count
+     * Storage_Interface.CSpecs.Blockdev_Request_Element_Size * 8;
 
    type Request_Channel_Array is
-     array (Ports_Config.Channel_Range) of Req_Chn.Channel_Type
+     array (Ports_Config.Channel_Range) of Storage_Interface.Req_Chn.Channel_Type
      with
        Object_Size => Request_Channels_Size;
 
    type Request_Reader_Array
    is array (Ports_Config.Channel_Range)
-      of Req_Chn.Reader.Reader_Type;
+      of Storage_Interface.Req_Chn.Reader.Reader_Type;
 
    pragma Warnings
      (GNATprove, Off,
@@ -63,20 +61,20 @@ is
    with
       Volatile,
       Async_Writers,
-      Address => System'To_Address (CSpecs.Blockdev_Request_Address_Base),
+      Address => System'To_Address (Storage_Interface.CSpecs.Blockdev_Request_Address_Base),
       Size    => Request_Channels_Size;
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
 
    Request_Readers : Request_Reader_Array
-      := (others => Req_Chn.Reader.Null_Reader);
+      := (others => Storage_Interface.Req_Chn.Reader.Null_Reader);
 
-   Response_Channels_Size : constant := CSpecs.Blockdev_Response_Element_Count
-     * CSpecs.Blockdev_Response_Element_Size * 8;
+   Response_Channels_Size : constant := Storage_Interface.CSpecs.Blockdev_Response_Element_Count
+     * Storage_Interface.CSpecs.Blockdev_Response_Element_Size * 8;
 
    type Response_Chan_Array is
-     array (Ports_Config.Channel_Range) of Resp_Chn.Channel_Type
+     array (Ports_Config.Channel_Range) of Storage_Interface.Resp_Chn.Channel_Type
      with
        Object_Size => Response_Channels_Size;
 
@@ -94,7 +92,7 @@ is
    with
       Volatile,
       Async_Readers,
-      Address => System'To_Address (CSpecs.Blockdev_Response_Address_Base),
+      Address => System'To_Address (Storage_Interface.CSpecs.Blockdev_Response_Address_Base),
       Size    => Response_Channels_Size;
    pragma Warnings
      (GNATprove, On,
@@ -103,19 +101,19 @@ is
      (GNATprove, On,
       "indirect writes to * through a potential alias are ignored");
 
-   --  Combine requests from the client to maximize the request length to the
+   --  CoStorage_Interface.MBine requests from the client to maximize the request length to the
    --  device. We need to store the request tags to answer the requests after
    --  data transfer finished.
 
-   Ports : Ports_Array := (others =>
+   Ports : Storage_Interface.Ports_Array := (others =>
     (Chan_Idx         => 0,
-     Devs             => (others => Internal_Device_Type'(
+     Devs             => (others => Storage_Interface.Internal_Device_Type'(
         Ahci_Port     => 0,
         Partition     => Ports_Config.Null_Partition,
         Sector_Offset => 0,
         Sector_Count  => 0,
         Is_Valid      => False,
-        Current       => Null_Current))));
+        Current       => Storage_Interface.Null_Current))));
 
    Unused_Debug_Requests : constant Boolean := False;
 
@@ -130,10 +128,10 @@ is
       use type Ports_Config.Device_Type;
 
       ID             : Ports_Config.Port_Range := 0;
-      Mbr_Not_Read   : Boolean         := True;
+      Mbr_Not_Read   : Boolean := True;
       Port           : Ports_Config.Port_Config_Type;
       Dev            : Ports_Config.Device_Type;
-      Devs           : Bit_Array (0 .. Integer (Ports_Config.Port_Range'Last));
+      Devs           : Storage_Interface.Bit_Array (0 .. Integer (Ports_Config.Port_Range'Last));
       Mbr_Partitions : Partitions.Partition_Table_Type := Partitions.Null_Partition_Table;
 
    begin
@@ -208,13 +206,13 @@ is
 
    procedure Send_Response
       (Chan_Idx : Ports_Config.Channel_Range;
-       Response : MB.Block_Response_Type)
+       Response : Storage_Interface.MB.Block_Response_Type)
    is
    begin
-      Resp_Chn.Writer_Instance.Write
+      Storage_Interface.Resp_Chn.Writer_Instance.Write
         (Channel => Response_Channels (Chan_Idx),
          Element => Response);
-      SK.Hypercall.Trigger_Event (Interfaces.Unsigned_8 (
+      SK.Hypercall.Trigger_Event (Number => Interfaces.Unsigned_8 (
          Storage_Drv_Cspecs_Wrapper.Channel_Arrays.Blockdev_Response_Event_Base
                      + Integer (Chan_Idx)));
    end Send_Response;
@@ -239,10 +237,12 @@ is
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid,
-      Post => Ports (Port_Idx).Devs (Dev_Idx).Current = Null_Current
+      Post => Ports (Port_Idx).Devs (Dev_Idx).Current = Storage_Interface.Null_Current
    is
 
-      Ret         : Status_Type := EIO;
+      use type Storage_Interface.Status_Type;
+
+      Ret         : Storage_Interface.Status_Type := Storage_Interface.EIO;
       Dev_Id      : constant Ports_Config.Port_Range
                      := Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port;
       Sector_Size : constant Interfaces.Unsigned_32 := Storage_Interface.Get_Sector_Size (Dev_Id);
@@ -250,16 +250,16 @@ is
                      := Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset +
                         Ports (Port_Idx).Devs (Dev_Idx).Sector_Offset;
       Sec_Cnt     : Interfaces.Unsigned_32;
-      Response    : MB.Block_Response_Type;
+      Response    : Storage_Interface.MB.Block_Response_Type;
       Address     : constant Interfaces.Unsigned_64
                      := Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
                               Get_Shm_Buffer_Base (Ports (Port_Idx).Chan_Idx);
    begin
       if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
-        = Tag_Array_Range'First
+        = Storage_Interface.Tag_Array_Range'First
         or else Sector_Size = 0
       then
-         Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
+         Ports (Port_Idx).Devs (Dev_Idx).Current := Storage_Interface.Null_Current;
 
          if Sector_Size = 0 then
             Log.Put_Line
@@ -280,7 +280,7 @@ is
                and Interfaces.Unsigned_64 ((Sector_Size - 1))) = 0)
       then
          case Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind is
-            when MB.Read =>
+            when Storage_Interface.MB.Read =>
                Storage_Interface.Execute_Read_Command
                  (Address => Address,
                   SLBA    => Start_Sec,
@@ -288,7 +288,7 @@ is
                   Dev_Id  => Dev_Id,
                   Status  => Ret);
 
-            when MB.Write =>
+            when Storage_Interface.MB.Write =>
                Storage_Interface.Execute_Write_Command
                  (Address => Address,
                   SLBA    => Start_Sec,
@@ -296,7 +296,7 @@ is
                   Dev_Id  => Dev_Id,
                   Status  => Ret);
 
-            when MB.Discard =>
+            when Storage_Interface.MB.Discard =>
                Storage_Interface.Execute_Discard_Command
                  (SLBA    => Start_Sec,
                   NLB     => Sec_Cnt,
@@ -304,7 +304,7 @@ is
                   Status  => Ret);
 
             when others =>
-               Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
+               Ports (Port_Idx).Devs (Dev_Idx).Current := Storage_Interface.Null_Current;
                return;
          end case;
       else
@@ -314,11 +314,11 @@ is
               (Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset));
       end if;
 
-      if Ret /= OK then
+      if Ret /= Storage_Interface.OK then
          Log.Put_Line
          ("RW failed: Sector: "
             & SK.Strings.Img (Start_Sec)
-            & " Number of Sectors: "
+            & " NuStorage_Interface.MBer of Sectors: "
             & SK.Strings.Img (Sec_Cnt)
             & " Ret: "
             & SK.Strings.Img (Status_To_Unsigned64 (Ret)));
@@ -331,8 +331,8 @@ is
       Response.Status_Code
          := Status_To_Unsigned64 (Ret);
 
-      for I in Tag_Array_Range range
-        Tag_Array_Range'First ..
+      for I in Storage_Interface.Tag_Array_Range range
+        Storage_Interface.Tag_Array_Range'First ..
           Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx - 1
       loop
          Response.Request_Tag
@@ -342,7 +342,7 @@ is
          end if;
       end loop;
 
-      Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
+      Ports (Port_Idx).Devs (Dev_Idx).Current := Storage_Interface.Null_Current;
    end Finish_Current_Request;
 
    --------------------------------------------------------------------
@@ -350,12 +350,12 @@ is
    procedure Process_Simple_Request
       (Port_Idx : Ports_Config.Ports_Array_Range;
        Dev_Idx  : Ports_Config.Devices_Range;
-       Request  : MB.Block_Request_Type)
+       Request  : Storage_Interface.MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
    is
-      Response     : MB.Block_Response_Type;
+      Response : Storage_Interface.MB.Block_Response_Type;
 
    begin
       Response.Request_Kind := Request.Request_Kind;
@@ -364,16 +364,16 @@ is
       Response.Status_Code  := 0;
 
       case Request.Request_Kind is
-         when MB.Media_Blocks =>
+         when Storage_Interface.MB.Media_Blocks =>
             Response.Status_Code :=
                Ports (Port_Idx).Devs (Dev_Idx).Sector_Count;
 
-         when MB.Block_Length =>
+         when Storage_Interface.MB.Block_Length =>
             Response.Status_Code :=
                Interfaces.Unsigned_64 (
                   Storage_Interface.Get_Sector_Size (Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port));
 
-         when MB.Max_Devices =>
+         when Storage_Interface.MB.Max_Devices =>
             declare
                Cnt : Interfaces.Unsigned_64 := 0;
             begin
@@ -385,11 +385,11 @@ is
                Response.Status_Code := Cnt;
             end;
 
-         when MB.Max_Blocks_Count =>
+         when Storage_Interface.MB.Max_Blocks_Count =>
             Response.Status_Code :=
                Storage_Interface.Get_Max_Sector_Cnt (Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port);
 
-         when MB.Reset =>
+         when Storage_Interface.MB.Reset =>
             for I in Ports (Port_Idx).Devs'Range loop
                if Ports (Port_Idx).Devs (I).Is_Valid then
                      Finish_Current_Request (Port_Idx, I, False);
@@ -397,7 +397,7 @@ is
             end loop;
             Response.Status_Code := 0;
 
-         when MB.Get_SMART =>
+         when Storage_Interface.MB.Get_SMART =>
             declare
                Address      : constant Interfaces.Unsigned_64
                    := Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
@@ -407,17 +407,16 @@ is
                                                      Dev_Id => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
                                                      Status => Response.Status_Code);
             end;
-         when MB.Sync =>
+         when Storage_Interface.MB.Sync =>
             --  end all outstanding requests
-               -- necessary?
-               for I in Ports (Port_Idx).Devs'Range loop
-                  if Ports (Port_Idx).Devs (I).Is_Valid then
-                     Finish_Current_Request (Port_Idx, I);
-                  end if;
-               end loop;
+            for I in Ports (Port_Idx).Devs'Range loop
+               if Ports (Port_Idx).Devs (I).Is_Valid then
+                  Finish_Current_Request (Port_Idx, I);
+               end if;
+            end loop;
 
-               Storage_Interface.Sync (Dev_Id => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
-                                       Status => Response.Status_Code);
+            Storage_Interface.Sync (Dev_Id => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
+                                    Status => Response.Status_Code);
 
          when others =>
             Log.Put_Line ("simple_req: unknown!");
@@ -431,15 +430,15 @@ is
    procedure Process_RWD_Request
       (Port_Idx : Ports_Config.Ports_Array_Range;
        Dev_Idx  : Ports_Config.Devices_Range;
-       Request  : MB.Block_Request_Type)
+       Request  : Storage_Interface.MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
    is
-      use type MB.Request_Kind_Type;
+      use type Storage_Interface.MB.Request_Kind_Type;
       use type Interfaces.Unsigned_16;
 
-      Response : MB.Block_Response_Type;
+      Response : Storage_Interface.MB.Block_Response_Type;
    begin
       if not Ports (Port_Idx).Devs (Dev_Idx).Is_Valid then
          Response.Request_Kind := Request.Request_Kind;
@@ -459,7 +458,7 @@ is
 
       -- FIXME NVMe implications?
       if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
-         /= Tag_Array_Range'First
+         /= Storage_Interface.Tag_Array_Range'First
       and then
          ((Request.Request_Kind
             /= Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind)
@@ -470,14 +469,14 @@ is
             /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset +
                Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length)
          or (Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
-            = Tag_Array_Range'Last)
+            = Storage_Interface.Tag_Array_Range'Last)
          or (Request.Device_Id
             /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Id))
       then
          Finish_Current_Request (Port_Idx, Dev_Idx);
       end if;
 
-      if Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind = MB.None
+      if Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind = Storage_Interface.MB.None
       then
          --  first request -> setup current fields
          Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset
@@ -504,7 +503,7 @@ is
 
    procedure Process_Request
       (Port_Idx : Ports_Config.Ports_Array_Range;
-       Request  : MB.Block_Request_Type)
+       Request  : Storage_Interface.MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
@@ -527,15 +526,15 @@ is
             & " -  invalid device ID, ignoring request");
 
          declare
-            Response : MB.Block_Response_Type;
+            Response : Storage_Interface.MB.Block_Response_Type;
          begin
             Response.Request_Kind := Request.Request_Kind;
             Response.Request_Tag  := Request.Request_Tag;
             Response.Device_Id    := Request.Device_Id;
 
             case Request.Request_Kind is
-               when MB.None | MB.Read | MB.Write | MB.Discard | MB.Sync
-                  | MB.Reset =>
+               when Storage_Interface.MB.None | Storage_Interface.MB.Read | Storage_Interface.MB.Write |
+                    Storage_Interface.MB.Discard | Storage_Interface.MB.Sync | Storage_Interface.MB.Reset =>
                   Response.Status_Code := 1;
                when  others =>
                   Response.Status_Code := 0;
@@ -551,15 +550,15 @@ is
       Dev_Idx := Ports_Config.Devices_Range (Request.Device_Id);
 
       case Request.Request_Kind is
-         when MB.Read | MB.Write | MB.Discard =>
+         when Storage_Interface.MB.Read | Storage_Interface.MB.Write | Storage_Interface.MB.Discard =>
                Process_RWD_Request (Port_Idx, Dev_Idx, Request);
-         when MB.Media_Blocks
-               | MB.Block_Length
-               | MB.Max_Blocks_Count
-               | MB.Max_Devices
-               | MB.Reset
-               | MB.Get_SMART
-               | MB.Sync =>
+         when Storage_Interface.MB.Media_Blocks
+               | Storage_Interface.MB.Block_Length
+               | Storage_Interface.MB.Max_Blocks_Count
+               | Storage_Interface.MB.Max_Devices
+               | Storage_Interface.MB.Reset
+               | Storage_Interface.MB.Get_SMART
+               | Storage_Interface.MB.Sync =>
                Process_Simple_Request (Port_Idx, Dev_Idx, Request);
          when others =>
             Log.Put_Line ("Unknown request!");
@@ -591,37 +590,37 @@ is
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
    is
-      use type Req_Chn.Reader.Result_Type;
+      use type Storage_Interface.Req_Chn.Reader.Result_Type;
 
-      Request : MB.Block_Request_Type;
-      Res     : Req_Chn.Reader.Result_Type;
+      Request : Storage_Interface.MB.Block_Request_Type;
+      Res     : Storage_Interface.Req_Chn.Reader.Result_Type;
    begin
       Process_Loop : loop
-         Req_Chn.Reader.Read
+         Storage_Interface.Req_Chn.Reader.Read
                (Channel => Request_Channels (Ports (Port_Idx).Chan_Idx),
                 Reader  => Request_Readers (Ports (Port_Idx).Chan_Idx),
                 Element => Request,
                 Result  => Res);
          case Res is
-            when Req_Chn.Reader.Incompatible_Interface =>
+            when Storage_Interface.Req_Chn.Reader.Incompatible_Interface =>
                pragma Debug (Log.Put_Line
                  (Item => "Request channel: Incompatible interface"
                   & " detected"));
-            when Req_Chn.Reader.Epoch_Changed =>
+            when Storage_Interface.Req_Chn.Reader.Epoch_Changed =>
                pragma Debug (Log.Put_Line
                  (Item => "Request channel: Epoch changed"));
-            when Req_Chn.Reader.No_Data =>
+            when Storage_Interface.Req_Chn.Reader.No_Data =>
                Finish_Current_Requests (Port_Idx);
-            when Req_Chn.Reader.Overrun_Detected =>
+            when Storage_Interface.Req_Chn.Reader.Overrun_Detected =>
                pragma Debug (Log.Put_Line
                  (Item => "Overrun!"));
-            when Req_Chn.Reader.Inactive =>
+            when Storage_Interface.Req_Chn.Reader.Inactive =>
                pragma Debug (Log.Put_Line
                   (Item => "Request channel: Inactive"));
-            when Req_Chn.Reader.Success =>
+            when Storage_Interface.Req_Chn.Reader.Success =>
                Process_Request (Port_Idx, Request);
          end case;
-         exit Process_Loop when Res /= Req_Chn.Reader.Success;
+         exit Process_Loop when Res /= Storage_Interface.Req_Chn.Reader.Success;
       end loop Process_Loop;
    end Process_Port;
 
@@ -633,7 +632,7 @@ is
    begin
       Process_Loop : loop
          for Port_Idx in Ports'Range loop
-            Req_Chn.Is_Active
+            Storage_Interface.Req_Chn.Is_Active
                (Request_Channels (Ports (Port_Idx).Chan_Idx), Active);
             if Active then
                Process_Port (Port_Idx);
@@ -646,7 +645,7 @@ begin
    --  Initialize all writer channels
 
    for Chn of Response_Channels loop
-      Resp_Chn.Writer_Instance.Initialize
+      Storage_Interface.Resp_Chn.Writer_Instance.Initialize
          (Channel => Chn,
           Epoch   => 1);
    end loop;

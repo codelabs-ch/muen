@@ -165,7 +165,7 @@ is
 
    -- CONTROLLER PROPERTIES
 
-   type ControllerProperties is record
+   type Controller_Properties is record
       CAP        : CAP_Part;    -- Controller Capabilities
       VS         : VS_Part;     -- Version
       INTMS      : Interfaces.Unsigned_32; -- Interrupt Mask Set
@@ -189,21 +189,14 @@ is
       CMBSWTP    : Interfaces.Unsigned_32; -- Controller Memory Buffer Sustained Write Throughput
       NSSD       : Interfaces.Unsigned_32; -- NVM Subsystem Shutdown
       CRTO       : CRTO_PART;   -- Controller Ready Timeouts
-   --     PMRCAP  : Unsigned_32; -- Persistent Memory Region Capabilities
-   --     PMRCTL  : Unsigned_32; -- Persistent Memory Region Control
-   --     PMRSTS  : Unsigned_32; -- Persistent Memory Region Status
-   --     PMREBS  : Unsigned_32; -- Persistent Memory Region Elasticity Buffer Size
-   --     PMRSWTP : Unsigned_32; -- Persistent Memory Region Sustained Write Throughput
-   --     PMRMSCL : Unsigned_32; -- Persistent Memory Region Memory Space Control Lower
-   --     PMRMSCU : Unsigned_32; -- Persistent Memory Region Memory Space Control Upper
-   --  end record with
-   --    Size => 3612*8;
+      -- Fields from here on are unused starting in NVMe 2.0
+      -- and thus ignored.
    end record
    with
       Size => 864,
       Object_Size => 864;
 
-   for ControllerProperties use record
+   for Controller_Properties use record
       CAP        at   0 range 0 .. 63;
       VS         at   8 range 0 .. 31;
       INTMS      at  12 range 0 .. 31;
@@ -301,102 +294,102 @@ is
       Reserved_10 at 23 range 0 .. 71;
    end record;
 
-   type SerialNumberString         is array (1 ..  20) of Character  with Pack, Object_Size =>   8 *  20;
-   type ModelNumberString          is array (1 ..  40) of Character  with Pack, Object_Size =>   8 *  40;
-   type FirmwareRevisionString     is array (1 ..   8) of Character  with Pack, Object_Size =>   8 *   8;
-   type IEEE_OUI_Identifier        is array (0 ..   2) of Interfaces.Unsigned_8 with Pack, Object_Size =>   8 *   3;
-   type NVMSS_QualifiedName_String is array (1 .. 256) of Character  with Pack, Object_Size =>   8 * 256;
-   type PowerStateDescriptors      is array (0 ..  31) of PSD        with Pack, Object_Size => 256 *  32;
+   type Serial_Number_String        is array (1 ..  20) of Character  with Pack, Object_Size =>   8 *  20;
+   type Model_Number_String         is array (1 ..  40) of Character  with Pack, Object_Size =>   8 *  40;
+   type Firmware_Revision_String    is array (1 ..   8) of Character  with Pack, Object_Size =>   8 *   8;
+   type IEEE_OUI_Identifier         is array (0 ..   2) of Interfaces.Unsigned_8 with Pack, Object_Size =>   8 *   3;
+   type NVMSS_Qualified_Name_String is array (1 .. 256) of Character  with Pack, Object_Size =>   8 * 256;
+   type Power_State_Descriptors     is array (0 ..  31) of PSD        with Pack, Object_Size => 256 *  32;
 
-   type IdentifyController is record
-      VID        : Interfaces.Unsigned_16;     -- PCI Vendor ID
-      SSVID      : Interfaces.Unsigned_16;     -- PCI Subsystem Vendor ID
-      SN         : SerialNumberString;         -- Serial Number (ASCII)
-      MN         : ModelNumberString;          -- Model Number (ASCII)
-      FR         : FirmwareRevisionString;     -- Firmware Revision (ASCII)
-      RAB        : Interfaces.Unsigned_8;      -- Recommended Arbitration Burst (2^N [Command])
-      IEEE       : IEEE_OUI_Identifier;        -- IEEE OUI Identifier
-      CMIC       : Interfaces.Unsigned_8;      -- Controller Multi-Path I/O and Namespace Sharing Capabilities
-      MDTS       : Interfaces.Unsigned_8;      -- Maximum Data Transfer Size (2^N [Minimum Page Size])
-      CNTLID     : Interfaces.Unsigned_16;     -- Controller ID
-      VER        : Interfaces.Unsigned_32;     -- Version
-      RTD3R      : Interfaces.Unsigned_32;     -- RTD3 Resume Latency
-      RTD3E      : Interfaces.Unsigned_32;     -- RTD3 Entry Latency
-      OAES       : Interfaces.Unsigned_32;     -- Optional Asynchronous Events Supported
-      CTRATT     : Interfaces.Unsigned_32;     -- Controller Attributes
-      RRLS       : Interfaces.Unsigned_16;     -- Read Recovery Levels Supported
+   type Identify_Controller is record
+      VID        : Interfaces.Unsigned_16;      -- PCI Vendor ID
+      SSVID      : Interfaces.Unsigned_16;      -- PCI Subsystem Vendor ID
+      SN         : Serial_Number_String;        -- Serial Number (ASCII)
+      MN         : Model_Number_String;         -- Model Number (ASCII)
+      FR         : Firmware_Revision_String;    -- Firmware Revision (ASCII)
+      RAB        : Interfaces.Unsigned_8;       -- Recommended Arbitration Burst (2^N [Command])
+      IEEE       : IEEE_OUI_Identifier;         -- IEEE OUI Identifier
+      CMIC       : Interfaces.Unsigned_8;       -- Controller Multi-Path I/O and Namespace Sharing Capabilities
+      MDTS       : Interfaces.Unsigned_8;       -- Maximum Data Transfer Size (2^N [Minimum Page Size])
+      CNTLID     : Interfaces.Unsigned_16;      -- Controller ID
+      VER        : Interfaces.Unsigned_32;      -- Version
+      RTD3R      : Interfaces.Unsigned_32;      -- RTD3 Resume Latency
+      RTD3E      : Interfaces.Unsigned_32;      -- RTD3 Entry Latency
+      OAES       : Interfaces.Unsigned_32;      -- Optional Asynchronous Events Supported
+      CTRATT     : Interfaces.Unsigned_32;      -- Controller Attributes
+      RRLS       : Interfaces.Unsigned_16;      -- Read Recovery Levels Supported
       Reserved_1 : Storage_Interface.Byte_Array (0 .. 8);
-      CNTRLTYPE  : Interfaces.Unsigned_8;      -- Controller Type
-      FGUID      : Interfaces.Unsigned_128;    -- FRU Globally Unique Identifier ### Maybe extend type
-      CRDT1      : Interfaces.Unsigned_16;     -- Command Retry Delay Time 1 in [100ms]
-      CRDT2      : Interfaces.Unsigned_16;     -- Command Retry Delay Time 2 in [100ms]
-      CRDT3      : Interfaces.Unsigned_16;     -- Command Retry Delay Time 3 in [100ms]
+      CNTRLTYPE  : Interfaces.Unsigned_8;       -- Controller Type
+      FGUID      : Interfaces.Unsigned_128;     -- FRU Globally Unique Identifier ### Maybe extend type
+      CRDT1      : Interfaces.Unsigned_16;      -- Command Retry Delay Time 1 in [100ms]
+      CRDT2      : Interfaces.Unsigned_16;      -- Command Retry Delay Time 2 in [100ms]
+      CRDT3      : Interfaces.Unsigned_16;      -- Command Retry Delay Time 3 in [100ms]
       -- NVMe V2.0
       --NVMSR     : Interfaces.Unsigned_8;                 -- NVM Subsytem Report
       --VWCI      : Interfaces.Unsigned_8;                 -- VPD Write Cycle Information
       --MEC       : Interfaces.Unsigned_8;                 -- Management Endpoint Capabilities
       Reserved_2 : Storage_Interface.Byte_Array (0 .. 121);
-      OACS       : Interfaces.Unsigned_16;     -- Optional Admin Command Support, old: OAPSCS
-      ACL        : Interfaces.Unsigned_8;      -- Abort Command Limit
-      AERL       : Interfaces.Unsigned_8;      -- Asynchronous Event Request Limit
-      FRMW       : Interfaces.Unsigned_8;      -- Firmware Updates
-      LPA        : Interfaces.Unsigned_8;      -- Log Page Attributes
-      ELPE       : Interfaces.Unsigned_8;      -- Error Log Page Entries
-      NPSS       : Interfaces.Unsigned_8;      -- Number of Power States Support
-      AVSCC      : Interfaces.Unsigned_8;      -- Admin Vendor Specific Command Configuration
-      APSTA      : Interfaces.Unsigned_8;      -- Autonomous Power State Transition Attributes
-      WCTEMP     : Interfaces.Unsigned_16;     -- Warning Composite Temperature Threshold in [K]
-      CCTEMP     : Interfaces.Unsigned_16;     -- Critical Composite Temperature Threshold in [K]
-      MTFA       : Interfaces.Unsigned_16;     -- Maximum Time for Firmware Activation
-      HMPRE      : Interfaces.Unsigned_32;     -- Host Memory Buffer Preferred Size in [4KiB]
-      HMMIN      : Interfaces.Unsigned_32;     -- Host Memory Buffer Minimum Size in [4KiB]
-      TNVMCAP    : Interfaces.Unsigned_128;    -- Total NVM Capacity in [B]
-      UNVMCAP    : Interfaces.Unsigned_128;    -- Unallocated NVM Capacity in [B]
-      RPMBS      : Interfaces.Unsigned_32;     -- Replay Protected Memory Block Support
-      EDSTT      : Interfaces.Unsigned_16;     -- Extended Device Self-test Time in [min]
-      DSTO       : Interfaces.Unsigned_8;      -- Device Self-test Options
-      FWUG       : Interfaces.Unsigned_8;      -- Firmware Update Granularity
-      KAS        : Interfaces.Unsigned_16;     -- Keep Alive Support in [100ms]
-      HCTMA      : Interfaces.Unsigned_16;     -- Host Controlled Thermal Management Attributes
-      MNTMT      : Interfaces.Unsigned_16;     -- Minimum Thermal Management Temperature in [K]
-      HXTMT      : Interfaces.Unsigned_16;     -- Maximum Thermal Management Temperature in [K]
-      SANICAP    : Interfaces.Unsigned_32;     -- Sanitize Capabilities
-      HMMINDS    : Interfaces.Unsigned_32;     -- Host Memory Buffer Minimum Descriptor Entry Size in [4KiB]
-      HMMAXD     : Interfaces.Unsigned_16;     -- Host Memory Maximum Descriptors Entries
-      NSETIDMAX  : Interfaces.Unsigned_16;     -- NVM Set Identifier Maximum
-      ENDGIDMAX  : Interfaces.Unsigned_16;     -- Endurance Group Identifier Maximum
-      ANATT      : Interfaces.Unsigned_8;      -- ANA Transition Time
-      ANACAP     : Interfaces.Unsigned_8;      -- Asymmetric Namespace Access Capabilities
-      ANAGPRMAX  : Interfaces.Unsigned_32;     -- ANA Group Identifier Maximum
-      NANAGPRID  : Interfaces.Unsigned_32;     -- Number of ANA Group Identifiers
-      PELS       : Interfaces.Unsigned_32;     -- Persistent Event Log Size in [64KiB]
+      OACS       : Interfaces.Unsigned_16;      -- Optional Admin Command Support, old: OAPSCS
+      ACL        : Interfaces.Unsigned_8;       -- Abort Command Limit
+      AERL       : Interfaces.Unsigned_8;       -- Asynchronous Event Request Limit
+      FRMW       : Interfaces.Unsigned_8;       -- Firmware Updates
+      LPA        : Interfaces.Unsigned_8;       -- Log Page Attributes
+      ELPE       : Interfaces.Unsigned_8;       -- Error Log Page Entries
+      NPSS       : Interfaces.Unsigned_8;       -- Number of Power States Support
+      AVSCC      : Interfaces.Unsigned_8;       -- Admin Vendor Specific Command Configuration
+      APSTA      : Interfaces.Unsigned_8;       -- Autonomous Power State Transition Attributes
+      WCTEMP     : Interfaces.Unsigned_16;      -- Warning Composite Temperature Threshold in [K]
+      CCTEMP     : Interfaces.Unsigned_16;      -- Critical Composite Temperature Threshold in [K]
+      MTFA       : Interfaces.Unsigned_16;      -- Maximum Time for Firmware Activation
+      HMPRE      : Interfaces.Unsigned_32;      -- Host Memory Buffer Preferred Size in [4KiB]
+      HMMIN      : Interfaces.Unsigned_32;      -- Host Memory Buffer Minimum Size in [4KiB]
+      TNVMCAP    : Interfaces.Unsigned_128;     -- Total NVM Capacity in [B]
+      UNVMCAP    : Interfaces.Unsigned_128;     -- Unallocated NVM Capacity in [B]
+      RPMBS      : Interfaces.Unsigned_32;      -- Replay Protected Memory Block Support
+      EDSTT      : Interfaces.Unsigned_16;      -- Extended Device Self-test Time in [min]
+      DSTO       : Interfaces.Unsigned_8;       -- Device Self-test Options
+      FWUG       : Interfaces.Unsigned_8;       -- Firmware Update Granularity
+      KAS        : Interfaces.Unsigned_16;      -- Keep Alive Support in [100ms]
+      HCTMA      : Interfaces.Unsigned_16;      -- Host Controlled Thermal Management Attributes
+      MNTMT      : Interfaces.Unsigned_16;      -- Minimum Thermal Management Temperature in [K]
+      HXTMT      : Interfaces.Unsigned_16;      -- Maximum Thermal Management Temperature in [K]
+      SANICAP    : Interfaces.Unsigned_32;      -- Sanitize Capabilities
+      HMMINDS    : Interfaces.Unsigned_32;      -- Host Memory Buffer Minimum Descriptor Entry Size in [4KiB]
+      HMMAXD     : Interfaces.Unsigned_16;      -- Host Memory Maximum Descriptors Entries
+      NSETIDMAX  : Interfaces.Unsigned_16;      -- NVM Set Identifier Maximum
+      ENDGIDMAX  : Interfaces.Unsigned_16;      -- Endurance Group Identifier Maximum
+      ANATT      : Interfaces.Unsigned_8;       -- ANA Transition Time
+      ANACAP     : Interfaces.Unsigned_8;       -- Asymmetric Namespace Access Capabilities
+      ANAGPRMAX  : Interfaces.Unsigned_32;      -- ANA Group Identifier Maximum
+      NANAGPRID  : Interfaces.Unsigned_32;      -- Number of ANA Group Identifiers
+      PELS       : Interfaces.Unsigned_32;      -- Persistent Event Log Size in [64KiB]
       Reserved_3 : Storage_Interface.Byte_Array (0 .. 155);
-      SQES       : Interfaces.Unsigned_8;      -- Submission Queue Entry Size (2^N [B])
-      CQES       : Interfaces.Unsigned_8;      -- Completion Queue Entry Size (2^N [B])
-      MAXCMD     : Interfaces.Unsigned_16;     -- Maximum Outstanding Commands
-      NN         : Interfaces.Unsigned_32;     -- Number of Namespaces
-      ONCS       : Interfaces.Unsigned_16;     -- Optional NVM Command Support
-      FUSES      : Interfaces.Unsigned_16;     -- Fused Operation Support
-      FNA        : Interfaces.Unsigned_8;      -- Format NVM Attributes
-      VWC        : Interfaces.Unsigned_8;      -- Volatile Write Cache
-      AWUN       : Interfaces.Unsigned_16;     -- Atomic Write Unit Normal in 0's Based [LB]
-      AWUPF      : Interfaces.Unsigned_16;     -- Atomic Write Unit Power Fail in 0's Based [LB]
-      NVMSCC     : Interfaces.Unsigned_8;      -- NVM Vendor Specific Command Configuration
-      NWPC       : Interfaces.Unsigned_8;      -- Namespace Write Protection Capabilities
-      ACWU       : Interfaces.Unsigned_16;     -- Atomic Compare & Write Unit in 0's Based [LB]
+      SQES       : Interfaces.Unsigned_8;       -- Submission Queue Entry Size (2^N [B])
+      CQES       : Interfaces.Unsigned_8;       -- Completion Queue Entry Size (2^N [B])
+      MAXCMD     : Interfaces.Unsigned_16;      -- Maximum Outstanding Commands
+      NN         : Interfaces.Unsigned_32;      -- Number of Namespaces
+      ONCS       : Interfaces.Unsigned_16;      -- Optional NVM Command Support
+      FUSES      : Interfaces.Unsigned_16;      -- Fused Operation Support
+      FNA        : Interfaces.Unsigned_8;       -- Format NVM Attributes
+      VWC        : Interfaces.Unsigned_8;       -- Volatile Write Cache
+      AWUN       : Interfaces.Unsigned_16;      -- Atomic Write Unit Normal in 0's Based [LB]
+      AWUPF      : Interfaces.Unsigned_16;      -- Atomic Write Unit Power Fail in 0's Based [LB]
+      NVMSCC     : Interfaces.Unsigned_8;       -- NVM Vendor Specific Command Configuration
+      NWPC       : Interfaces.Unsigned_8;       -- Namespace Write Protection Capabilities
+      ACWU       : Interfaces.Unsigned_16;      -- Atomic Compare & Write Unit in 0's Based [LB]
       Reserved_4 : Storage_Interface.Byte_Array (0 .. 1);
-      SGLS       : Interfaces.Unsigned_32;     -- SGL Support
-      MNAN       : Interfaces.Unsigned_32;     -- Maximum Number of Allowed Namespaces
+      SGLS       : Interfaces.Unsigned_32;      -- SGL Support
+      MNAN       : Interfaces.Unsigned_32;      -- Maximum Number of Allowed Namespaces
       Reserved_5 : Storage_Interface.Byte_Array (0 .. 223);
-      SUBNQN     : NVMSS_QualifiedName_String; -- NVM Subsystem NVMe Qualified Name
+      SUBNQN     : NVMSS_Qualified_Name_String; -- NVM Subsystem NVMe Qualified Name
       Reserved_6 : Storage_Interface.Byte_Array (0 .. 1023);
-      PSD0       : PowerStateDescriptors;      -- Power State 0 Descriptors
+      PSD0       : Power_State_Descriptors;     -- Power State 0 Descriptors
    end record
    with
       Size => 3072 * 8,
       Object_Size => 3072 * 8;
 
-   for IdentifyController use record
+   for Identify_Controller use record
       VID        at    0 range   0 ..   15;
       SSVID      at    2 range   0 ..   15;
       SN         at    4 range   0 ..  159;
@@ -458,7 +451,7 @@ is
       NANAGPRID  at  348 range   0 ..   31;
       PELS       at  352 range   0 ..   31;
       Reserved_3 at  356 range   0 .. 1247;
-      -- Insert missing for 2.0
+      -- Insert missing for 2.0 (if required)
       SQES       at  512 range   0 ..    7;
       CQES       at  513 range   0 ..    7;
       MAXCMD     at  514 range   0 ..   15;
@@ -472,11 +465,11 @@ is
       NVMSCC     at  530 range   0 ..    7;
       NWPC       at  531 range   0 ..    7;
       ACWU       at  532 range   0 ..   15;
-      -- Insert missing for 2.0
+      -- Insert missing for 2.0 (if required)
       Reserved_4 at  534 range   0 ..   15;
       SGLS       at  536 range   0 ..   31;
       MNAN       at  540 range   0 ..   31;
-      -- Insert missing for 2.0
+      -- Insert missing for 2.0 (if required)
       Reserved_5 at  544 range   0 .. 1791;
       SUBNQN     at  768 range   0 .. 2047;
       Reserved_6 at 1024 range   0 .. 8191;
@@ -548,7 +541,7 @@ is
       Pack,
       Object_Size => 32 * 64;
 
-   type IdentifyNamespace is record
+   type Identify_Namespace is record
       NSZE       : Interfaces.Unsigned_64;  -- Namespace Size
       NCAP       : Interfaces.Unsigned_64;  -- Namespace Capacity
       NUSE       : Interfaces.Unsigned_64;  -- Namespace Utilization
@@ -592,7 +585,7 @@ is
       Size => 384 * 8,
       Object_Size => 384 * 8;
 
-   for IdentifyNamespace use record
+   for Identify_Namespace use record
       NSZE      at   0 range 0 ..   63;
       NCAP      at   8 range 0 ..   63;
       NUSE      at  16 range 0 ..   63;
@@ -640,7 +633,7 @@ is
    CMD_Identifier_Admin : Interfaces.Unsigned_16 := 0;
    CMD_Identifier_IO    : Interfaces.Unsigned_16 := 0;
 
-   -- constants
+   -- only set once
    -- MPS in Byte
    Memory_Page_Size : Interfaces.Unsigned_8 := 0;
 
@@ -662,18 +655,18 @@ is
       Address2     at 4 range 0 .. 31;
    end record;
 
-   procedure ProcessAdminCommand
+   procedure Process_Admin_Command
      (AdminCMD :     SubmissionQ.Admin_Command;
       Status   : out Status_Type);
 
-   procedure ProcessIOCommand
+   procedure Process_IO_Command
      (IOCmd  :     SubmissionQ.IO_Command;
       Status : out Status_Type)
    with Pre => Is_Valid;
 
    type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
 
-   procedure GetSMART
+   procedure Get_Smart
      (Address      :     Interfaces.Unsigned_64;
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
@@ -691,7 +684,7 @@ is
    --- 3.5 Controller Initialization
    -------------------------------------------------------------------------
 
-   procedure ControllerInit (Success : out Boolean)
+   procedure Controller_Init (Success : out Boolean)
    with Pre  => Check_Sector_Size,
         Post => (if Success then Is_Valid);
 
@@ -699,7 +692,7 @@ is
    --- 3.6 Controller Shutdown
    -------------------------------------------------------------------------
 
-   procedure ControllerShutdown
+   procedure Controller_Shutdown
    with Pre => Is_Valid;
 
    -------------------------------------------------------------------------

@@ -223,14 +223,6 @@ is
       192 .. 255 => "Path Related Status - Vendor Specific                                                           "
    );
 
-   Reserved_Status_Codes : constant Status_Code_Array (0 .. 255) := (
-      others => "RESERVED                                                                                        "
-   );
-
-   Vendor_Status_Codes : constant Status_Code_Array (0 .. 255) := (
-      others => "Vendor Specific                                                                                 "
-   );
-
    -------------------------------------------------------------------------
 
    procedure Print_Status_Code
@@ -258,8 +250,8 @@ is
          when 1      => Msg := Command_Specific_Status_Codes (SC);
          when 2      => Msg := Media_Status_Codes (SC);
          when 3      => Msg := Path_Status_Codes (SC);
-         when 4 .. 6 => Msg := Reserved_Status_Codes (SC);
-         when 7      => Msg := Vendor_Status_Codes (SC);
+         when 4 .. 6 => Msg := "RESERVED                                                                                        ";
+         when 7      => Msg := "Vendor Specific                                                                                 ";
       end case;
 
       Log.Put_String (Msg (1 .. Msg_Length (Msg)));

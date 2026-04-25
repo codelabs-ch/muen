@@ -108,7 +108,7 @@ is
                Is_Valid      => False,
                Current       => Null_Current))));
 
-      NVMe.Host.ControllerInit (Success);
+      NVMe.Host.Controller_Init (Success);
       -- Testing IO
       Ports (1).Chan_Idx := Ports_Config.Port_Config (1).Chan_Idx;
       Ports (1).Devs (0) := (Ahci_Port     => 0,
@@ -167,7 +167,7 @@ is
           NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
-      NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
+      NVMe.Host.Process_IO_Command (IOCmd => IO_CMD, Status => NVMe_Status);
 
       case NVMe_Status is
          when NVMe.OK =>                   Status := OK;
@@ -201,7 +201,7 @@ is
           NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
-      NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
+      NVMe.Host.Process_IO_Command (IOCmd => IO_CMD, Status => NVMe_Status);
 
       case NVMe_Status is
          when NVMe.OK =>                   Status := OK;
@@ -230,7 +230,7 @@ is
           NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
-      NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
+      NVMe.Host.Process_IO_Command (IOCmd => IO_CMD, Status => NVMe_Status);
 
       case NVMe_Status is
          when NVMe.OK =>                   Status := OK;
@@ -253,7 +253,7 @@ is
    begin
       Dummy_Use (Dev_Id);
 
-      NVMe.Host.GetSMART (Address, SMART_Status, NVMe_Status);
+      NVMe.Host.Get_Smart (Address, SMART_Status, NVMe_Status);
       if NVMe_Status = NVMe.OK then
          case SMART_Status is
             when NVMe.Host.OK =>
@@ -282,7 +282,7 @@ is
 
       -- TODO Check for IO SQ Tail Pointer / Head Pointer
       NVMe.IOCommandSet.CreateFlush_Command (NVMe.Host.CMD_Identifier_IO, IO_CMD);
-      NVMe.Host.ProcessIOCommand (IO_CMD, NVMe_Status);
+      NVMe.Host.Process_IO_Command (IO_CMD, NVMe_Status);
 
       if NVMe_Status = NVMe.OK then
          Status := 0;

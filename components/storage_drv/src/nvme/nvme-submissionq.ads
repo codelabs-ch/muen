@@ -111,10 +111,10 @@ is
 
    subtype Admin_Command is SQE
    with Predicate => Admin_Command.PSDT = 0 and
-                     Admin_Command.OPC in AdminCMD_Valid_Opcodes;
+                     Admin_Command.OPC in Admin_CMD_Valid_Opcodes;
 
-   subtype AdminCMD_Valid_Opcodes is Interfaces.Unsigned_8
-   with Predicate => AdminCMD_Valid_Opcodes in
+   subtype Admin_CMD_Valid_Opcodes is Interfaces.Unsigned_8
+   with Predicate => Admin_CMD_Valid_Opcodes in
       0 .. 2 | 4 .. 6 | 8 .. 10 | 12 .. 13 | 16#10# .. 16#11# |
       16#14# .. 16#15# | 16#18# .. 16#1A# | 16#1C# .. 16#1E# |
       16#20# | 16#24# | 16#7C# | 16#7F# | 16#80# .. 16#82# |

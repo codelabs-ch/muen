@@ -1,11 +1,6 @@
-with Interfaces;
-
+-- All Spec references reference NVMe Base Spec 2.0c
 package NVMe
 is
-
-   subtype Queue_Range is Interfaces.Unsigned_32 range 2 .. 65_535; -- 0 .. ?
-
-   subtype Admin_Queue_Range is Interfaces.Unsigned_32 range 2 .. 4_095;
 
    NVMe_Class_Code : constant := 16#010802#;
 

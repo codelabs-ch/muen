@@ -141,7 +141,7 @@ is
    type Devices_Array is array (Ports_Config.Port_Range) of Device_Info;
    Devices : Devices_Array := (others => Null_Device);
 
-   --  Error constants (matching linux/blk_types.h)
+   --  Error constants (matching linux/blk_types.h).
    type Status_Type is  (OK, ENOTSUP, EIO)
       with Size => 8 * 8;
    for  Status_Type use (OK => 0, ENOTSUP => 1, EIO => 10);

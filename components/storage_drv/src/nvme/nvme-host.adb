@@ -46,16 +46,16 @@ is
    IOCQ_HD_Address : constant := PCIE_Memory.Controller_Mem1_Address + IOCQ_HD_Offset;
 
    -- DRAM Memory
-   Ident_Controller_Offset      : constant := 16#0004_0000#;
-   Ident_Controller_Address     : constant := DRAM_Memory.Queue_Memory_Address + Ident_Controller_Offset;
-   IO_CMD_Sets_Offset           : constant := 16#0005_0000#;
-   IO_CMD_Sets_Address          : constant := DRAM_Memory.Queue_Memory_Address + IO_CMD_Sets_Offset;
-   Namespace_List_Offset        : constant := 16#0006_0000#;
-   Namespace_List_Address       : constant := DRAM_Memory.Queue_Memory_Address + Namespace_List_Offset;
-   Ident_Namespace_Offset       : constant := 16#0007_0000#;
-   Ident_Namespace_Address      : constant := DRAM_Memory.Queue_Memory_Address + Ident_Namespace_Offset;
-   SMART_Health_LogPage_Offset  : constant := 16#0009_0000#;
-   SMART_Health_LogPage_Address : constant := DRAM_Memory.Queue_Memory_Address + SMART_Health_LogPage_Offset;
+   Ident_Controller_Offset       : constant := 16#0004_0000#;
+   Identify_Controller_Address   : constant := DRAM_Memory.Queue_Memory_Address + Ident_Controller_Offset;
+   IO_CMD_Sets_Offset            : constant := 16#0005_0000#;
+   IO_CMD_Sets_Address           : constant := DRAM_Memory.Queue_Memory_Address + IO_CMD_Sets_Offset;
+   Namespace_List_Offset         : constant := 16#0006_0000#;
+   Namespace_List_Address        : constant := DRAM_Memory.Queue_Memory_Address + Namespace_List_Offset;
+   Ident_Namespace_Offset        : constant := 16#0007_0000#;
+   Ident_Namespace_Address       : constant := DRAM_Memory.Queue_Memory_Address + Ident_Namespace_Offset;
+   SMART_Health_Log_Page_Offset  : constant := 16#0009_0000#;
+   SMART_Health_Log_Page_Address : constant := DRAM_Memory.Queue_Memory_Address + SMART_Health_Log_Page_Offset;
 
    Test_IO_Write_Offset  : constant := 16#0008_0000#;
    Test_IO_Write_Address : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Write_Offset;
@@ -84,7 +84,7 @@ is
       Address =>
        System'To_Address (Bar0_Address);
 
-   CProp : ControllerProperties
+   CProp : Controller_Properties
    with
       Volatile,
       Async_Readers,
@@ -104,7 +104,7 @@ is
       Address =>
        System'To_Address (ASQ_Address);
 
-   ASQ_TailDoorbell : Interfaces.Unsigned_32 := 0
+   ASQ_Tail_Doorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -126,7 +126,7 @@ is
      Address =>
       System'To_Address (ACQ_Address);
 
-   ACQ_HeadDoorbell : Interfaces.Unsigned_32 := 0
+   ACQ_Head_Doorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -134,8 +134,8 @@ is
       Address =>
        System'To_Address (ACQ_HD_Address);
 
-   ACQ_Index    : CompletionQ.Entry_Queue_Range := 0;
-   ACQ_PhaseTag : Boolean                       := False;
+   ACQ_Index     : CompletionQ.Entry_Queue_Range := 0;
+   ACQ_Phase_Tag : Boolean                       := False;
 
    -------------------------------------------------------------------------
    -- IO Submission Queue
@@ -148,7 +148,7 @@ is
       Address =>
        System'To_Address (IOSQ_Address);
 
-   IOSQ_TailDoorbell : Interfaces.Unsigned_32 := 0
+   IOSQ_Tail_Doorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -170,7 +170,7 @@ is
       Address =>
        System'To_Address (IOCQ_Address);
 
-   IOCQ_HeadDoorbell : Interfaces.Unsigned_32 := 0
+   IOCQ_Head_Doorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -178,18 +178,18 @@ is
       Address =>
        System'To_Address (IOCQ_HD_Address);
 
-   IOCQ_Index    : CompletionQ.Entry_Queue_Range := 0;
-   IOCQ_PhaseTag : Boolean                       := False;
+   IOCQ_Index     : CompletionQ.Entry_Queue_Range := 0;
+   IOCQ_Phase_Tag : Boolean                       := False;
 
    -------------------------------------------------------------------------
    -- Other Declarations
    -------------------------------------------------------------------------
 
-   IdentController : IdentifyController
+   Ident_Controller : Identify_Controller
    with
       Volatile,
       Async_Writers,
-      Address => System'To_Address (Ident_Controller_Address);
+      Address => System'To_Address (Identify_Controller_Address);
 
    -- last item is where the next one has every flag as false
    IO_CMD_Sets : IO_CMD_Set_Array
@@ -207,17 +207,17 @@ is
       Async_Writers,
       Address => System'To_Address (Namespace_List_Address);
 
-   IdentNamespace : IdentifyNamespace
+   Ident_Namespace : Identify_Namespace
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address (Ident_Namespace_Address);
 
-   IO_Write_TestNum : Interfaces.Unsigned_32 := 69_420
+   IO_Write_Test_Num : Interfaces.Unsigned_32 := 69_420
    with
       Address => System'To_Address (Test_IO_Write_Address);
 
-   IO_Read_TestNum : Interfaces.Unsigned_32 := 0
+   IO_Read_Test_Num : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Writers,
@@ -227,7 +227,7 @@ is
    with
       Volatile,
       Async_Writers,
-      Address => System'To_Address (SMART_Health_LogPage_Address);
+      Address => System'To_Address (SMART_Health_Log_Page_Address);
 
    pragma Warnings
      (GNATprove, On,
@@ -236,7 +236,7 @@ is
      (GNATprove, On,
       "indirect writes to * through a potential alias are ignored");
 
-   -- MUENBLOCK Constants
+   -- Muenblock set-once "constants"
    MB_Size             : Interfaces.Unsigned_64 := 0;
    MB_Sector_Count     : Interfaces.Unsigned_64 := 0;
    MB_Max_Sector_Count : Interfaces.Unsigned_64 := 0;
@@ -278,7 +278,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure ProcessAdminCommand
+   procedure Process_Admin_Command
       (AdminCMD :     SubmissionQ.Admin_Command;
        Status   : out Status_Type)
    is
@@ -295,12 +295,12 @@ is
       else
          ASQ_Index := ASQ_Index + 1;
       end if;
-      ASQ_TailDoorbell := Interfaces.Unsigned_32 (ASQ_Index);
+      ASQ_Tail_Doorbell := Interfaces.Unsigned_32 (ASQ_Index);
       Status := Unknown;
 
       loop
          Temp_CQE := ACQ (ACQ_Index);
-         exit when Temp_CQE.P /= ACQ_PhaseTag;
+         exit when Temp_CQE.P /= ACQ_Phase_Tag;
          -- Todo Timeout
       end loop;
       if Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC = 0 then
@@ -326,17 +326,17 @@ is
          -- Queue Wrap
          ACQ_Index := 0;
          -- Inverting Phase Tag
-         ACQ_PhaseTag := not ACQ_PhaseTag;
+         ACQ_Phase_Tag := not ACQ_Phase_Tag;
       else
          ACQ_Index := ACQ_Index + 1;
       end if;
-      ACQ_HeadDoorbell := Interfaces.Unsigned_32 (ACQ_Index);
+      ACQ_Head_Doorbell := Interfaces.Unsigned_32 (ACQ_Index);
 
-   end ProcessAdminCommand;
+   end Process_Admin_Command;
 
    -------------------------------------------------------------------------
 
-   procedure GetSMART
+   procedure Get_Smart
      (Address      :     Interfaces.Unsigned_64;
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
@@ -360,7 +360,7 @@ is
          (CMD_Identifier => CMD_Identifier_Admin,
           DPTR           => PRP_D_Ptr,
           Command        => Admin_CMD);
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
 
       if NVMe_Status /= OK then
          SMART_Status := Undefined;
@@ -368,13 +368,14 @@ is
       end if;
 
       -- execute again so we get the logpage also on our specified location to check flags
-      PRP_D_Ptr.E1 := SMART_Health_LogPage_Address;
+      -- TODO: Couldn't this be done by the caller on his Address result? Maybe with a helper function.
+      PRP_D_Ptr.E1 := SMART_Health_Log_Page_Address;
 
       Admin_Command_Set.Create_SMART_Health_Log_Page_Command
          (CMD_Identifier => CMD_Identifier_Admin,
           DPTR           => PRP_D_Ptr,
           Command        => Admin_CMD);
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
 
       if NVMe_Status = OK
       then
@@ -393,11 +394,11 @@ is
       else
          SMART_Status := Undefined;
       end if;
-   end GetSMART;
+   end Get_Smart;
 
    -------------------------------------------------------------------------
 
-   procedure ProcessIOCommand
+   procedure Process_IO_Command
       (IOCmd  :     SubmissionQ.IO_Command;
        Status : out Status_Type)
    is
@@ -414,12 +415,12 @@ is
       else
          IOSQ_Index := IOSQ_Index + 1;
       end if;
-      IOSQ_TailDoorbell  := Interfaces.Unsigned_32 (IOSQ_Index);
+      IOSQ_Tail_Doorbell  := Interfaces.Unsigned_32 (IOSQ_Index);
       Status := Unknown;
 
       loop
          Temp_CQE := IOCQ (IOCQ_Index);
-         exit when Temp_CQE.P /= IOCQ_PhaseTag and Temp_CQE.CID = IOCmd.CID;
+         exit when Temp_CQE.P /= IOCQ_Phase_Tag and Temp_CQE.CID = IOCmd.CID;
       end loop;
 
       if Temp_CQE.CID = IOCmd.CID and Temp_CQE.Status.SC = 0 then
@@ -442,25 +443,25 @@ is
          -- Queue Wrap
          IOCQ_Index := 0;
          -- Inverting Phase Tag
-         IOCQ_PhaseTag := not IOCQ_PhaseTag;
+         IOCQ_Phase_Tag := not IOCQ_Phase_Tag;
       else
          IOCQ_Index := IOCQ_Index + 1;
       end if;
-      IOCQ_HeadDoorbell := Interfaces.Unsigned_32 (IOCQ_Index);
+      IOCQ_Head_Doorbell := Interfaces.Unsigned_32 (IOCQ_Index);
 
-   end ProcessIOCommand;
+   end Process_IO_Command;
 
    -------------------------------------------------------------------------
    --- 3.5 Controller Initialization
    -------------------------------------------------------------------------
 
-   procedure ControllerInit (Success : out Boolean)
+   procedure Controller_Init (Success : out Boolean)
    is
       use type CompletionQ.Entry_Queue_Range;
       use type Storage_Interface.Unsigned_2;
       use type Storage_Interface.Unsigned_4;
 
-      type CDW11_SetIOSetsType is record
+      type CDW11_SetIOSets_Type is record
          IOCSCI  : IO_CMD_Set_Array_Index_Type;
          Filler1 : Storage_Interface.Unsigned_7  := 0;
          Filler2 : Interfaces.Unsigned_16 := 0;
@@ -468,27 +469,27 @@ is
       with
          Size => 32;
 
-      for CDW11_SetIOSetsType use record
+      for CDW11_SetIOSets_Type use record
          IOCSCI  at 0 range 0 ..  8;
          Filler1 at 1 range 1 ..  7;
          Filler2 at 2 range 0 .. 15;
       end record;
 
-      type CDW11_NumOfQsType is record
+      type CDW11_NumOfQs_Type is record
          NSQR : Interfaces.Unsigned_16;
          NCQR : Interfaces.Unsigned_16;
       end record
       with
          Size => 32;
 
-      for CDW11_NumOfQsType use record
+      for CDW11_NumOfQs_Type use record
          NSQR at 0 range 0 .. 15;
          NCQR at 2 range 0 .. 15;
       end record;
 
       function uInt8ToBitArray   is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, Storage_Interface.Bit_Array_8);
-      function IOCMDIndexToCDW11 is new Ada.Unchecked_Conversion (CDW11_SetIOSetsType, Interfaces.Unsigned_32);
-      function NumOfQsToCDW11    is new Ada.Unchecked_Conversion (CDW11_NumOfQsType, Interfaces.Unsigned_32);
+      function IOCMDIndexToCDW11 is new Ada.Unchecked_Conversion (CDW11_SetIOSets_Type, Interfaces.Unsigned_32);
+      function NumOfQsToCDW11    is new Ada.Unchecked_Conversion (CDW11_NumOfQs_Type, Interfaces.Unsigned_32);
 
       CSS_BitArray        : Storage_Interface.Bit_Array_8;
       Admin_CMD           : SubmissionQ.Admin_Command;
@@ -674,7 +675,7 @@ is
       --- 7. Identify Controller
       ---------------------------------------------------
 
-      PRP_D_Ptr.E1 := Ident_Controller_Address;
+      PRP_D_Ptr.E1 := Identify_Controller_Address;
 
       Admin_Command_Set.Create_Indentify_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
@@ -687,7 +688,7 @@ is
          UUID_Index       => 0,
          Command          => Admin_CMD);
 
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
 
       if NVMe_Status /= OK then
          Log.Put_Line ("NVME: Error During NVMe Controller Init Step 7");
@@ -695,7 +696,7 @@ is
       end if;
 
       declare
-         VID : constant Interfaces.Unsigned_16 := IdentController.VID;
+         VID : constant Interfaces.Unsigned_16 := Ident_Controller.VID;
       begin
          Log.Put_Line ("VID: " & SK.Strings.Img (VID));
       end;
@@ -728,7 +729,7 @@ is
             UUID_Index       => 0,
             Command          => Admin_CMD);
 
-         ProcessAdminCommand (Admin_CMD, NVMe_Status);
+         Process_Admin_Command (Admin_CMD, NVMe_Status);
          if NVMe_Status /= OK then
             Log.Put_Line ("NVME: Error During NVMe 1.4 Controller Init Step 8.b.i");
             return;
@@ -765,16 +766,16 @@ is
                UUID_Index       => 0,
                Command          => Admin_CMD);
 
-            ProcessAdminCommand (Admin_CMD, NVMe_Status);
+            Process_Admin_Command (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe 1.4 Controller Init Step 8.b.ii");
                return;
             end if;
 
             declare
-               Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
-               Temp_NSZE     : constant Interfaces.Unsigned_64 := IdentNamespace.NSZE;
-               Temp_NCAP     : constant Interfaces.Unsigned_64 := IdentNamespace.NCAP;
+               Temp_LBA_List : constant LBA_Format_List := Ident_Namespace.LBA_List;
+               Temp_NSZE     : constant Interfaces.Unsigned_64 := Ident_Namespace.NSZE;
+               Temp_NCAP     : constant Interfaces.Unsigned_64 := Ident_Namespace.NCAP;
             begin
                Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
                if Temp_LBA_List (0).LBADS not in 9 | 12 then
@@ -810,7 +811,7 @@ is
             UUID_Index       => 0,
             Command          => Admin_CMD);
 
-         ProcessAdminCommand (Admin_CMD, NVMe_Status);
+         Process_Admin_Command (Admin_CMD, NVMe_Status);
          if NVMe_Status /= OK then
             Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.a.i");
             return;
@@ -850,7 +851,7 @@ is
             CDW11_Cvt      => CDW11_Temp,
             Command        => Admin_CMD);
 
-         ProcessAdminCommand (Admin_CMD, NVMe_Status);
+         Process_Admin_Command (Admin_CMD, NVMe_Status);
          if NVMe_Status /= OK then
             Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.a.ii");
             return;
@@ -921,7 +922,7 @@ is
 
             Log.Put_Line ("Identifying CMD Set at Index " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_CMD_Set_Iterator))
                           & " of " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_CMD_Set_Index)));
-            ProcessAdminCommand (Admin_CMD, NVMe_Status);
+            Process_Admin_Command (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.b.i");
                return;
@@ -959,16 +960,16 @@ is
                      CNSSpecificIdent => 0,
                      UUID_Index       => 0,
                      Command          => Admin_CMD);
-                  ProcessAdminCommand (Admin_CMD, NVMe_Status);
+                  Process_Admin_Command (Admin_CMD, NVMe_Status);
                   if NVMe_Status /= OK then
                      Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.b.ii");
                      return;
                   end if;
 
                   declare
-                     Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
-                     Temp_NSZE     : constant Interfaces.Unsigned_64 := IdentNamespace.NSZE;
-                     Temp_NCAP     : constant Interfaces.Unsigned_64 := IdentNamespace.NCAP;
+                     Temp_LBA_List : constant LBA_Format_List := Ident_Namespace.LBA_List;
+                     Temp_NSZE     : constant Interfaces.Unsigned_64 := Ident_Namespace.NSZE;
+                     Temp_NCAP     : constant Interfaces.Unsigned_64 := Ident_Namespace.NCAP;
                   begin
                      Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
                      if Temp_LBA_List (0).LBADS not in 9 | 12 then
@@ -1006,7 +1007,7 @@ is
          UUID_Index     => 0,
          CDW11_Cvt      => CDW11_Temp,
          Command        => Admin_CMD);
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
       if NVMe_Status /= OK then
          Log.Put_Line ("NVME: Error During NVMe Controller Init Step 9");
          return;
@@ -1034,7 +1035,7 @@ is
          PC               => True,
          IEN              => False,
          Command          => Admin_CMD);
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
       if NVMe_Status /= OK then
          Log.Put_Line ("NVME: Error During NVMe Controller Init Step 10");
          return;
@@ -1054,7 +1055,7 @@ is
          QPRIO            => 0,
          CQID             => 1,
          Command          => Admin_CMD);
-      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+      Process_Admin_Command (Admin_CMD, NVMe_Status);
       if NVMe_Status /= OK then
          Log.Put_Line ("NVME: Error During NVMe Controller Init Step 11");
          return;
@@ -1063,13 +1064,13 @@ is
       Success := True;
       Log.Put_Line ("NVME: Finished Controller Init");
 
-   end ControllerInit;
+   end Controller_Init;
 
    ---------------------------------------------------
    --- 3.6 Controller Shutdown
    ---------------------------------------------------
 
-   procedure ControllerShutdown
+   procedure Controller_Shutdown
    is
       Admin_CMD   : SubmissionQ.Admin_Command;
       NVMe_Status : Status_Type;
@@ -1087,7 +1088,7 @@ is
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);
-            ProcessAdminCommand (Admin_CMD, NVMe_Status);
+            Process_Admin_Command (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe Controller Shutdown Step 1-1");
             end if;
@@ -1096,7 +1097,7 @@ is
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);
-            ProcessAdminCommand (Admin_CMD, NVMe_Status);
+            Process_Admin_Command (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe Controller Shutdown Step 1-2");
             end if;
@@ -1129,7 +1130,7 @@ is
 
       Log.Put_Line ("Controller shutdown complete.");
 
-   end ControllerShutdown;
+   end Controller_Shutdown;
 
    --------------------------------------------------------------------------
 

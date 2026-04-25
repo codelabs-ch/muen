@@ -9,7 +9,7 @@ is
    --- 3.3.3.2 Common Completion Queue Entry
    -------------------------------------------------------------------------
 
-   type StatusField is record
+   type Status_Field is record
       SC  : Interfaces.Unsigned_8;        -- Status Code
       SCT : Storage_Interface.Unsigned_3; -- Status Code Type
       CRD : Storage_Interface.Unsigned_2; -- Command Retry Delay
@@ -19,7 +19,7 @@ is
    with
      Size => 15;
 
-   for StatusField use record
+   for Status_Field use record
       SC  at 0 range 0 .. 7;
       SCT at 1 range 0 .. 2;
       CRD at 1 range 3 .. 4;
@@ -27,7 +27,7 @@ is
       DNR at 1 range 6 .. 6;
    end record;
 
-   Null_StatusField : StatusField :=
+   Null_Status_Field : Status_Field :=
       (SC     => 0,
        SCT    => 0,
        CRD    => 0,
@@ -42,7 +42,7 @@ is
 
       CID    : Interfaces.Unsigned_16;      -- Command Identifier
       P      : Boolean;                     -- Phase Tag
-      Status : StatusField;                 -- Status Field
+      Status : Status_Field;                 -- Status Field
    end record
    with
      Size => 16 * 8;
@@ -59,7 +59,7 @@ is
 
    Null_CQE : constant CQE :=
       (P      => False,
-       Status => Null_StatusField,
+       Status => Null_Status_Field,
        DWORD0 => 0,
        DWORD1 => 0,
        others => 0);

@@ -50,7 +50,7 @@ is
       use type Interfaces.Integer_64;
 
       Sector_Size    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Host.Get_Sector_Size);
-      Exponent       : constant Natural     := 12 + Natural (NVMe.Host.Memory_Page_Size);
+      Exponent       : constant Natural                := 12 + Natural (NVMe.Host.Memory_Page_Size);
       MPS_UInt       : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (2) ** Exponent;
       MPS_Int        : constant Interfaces.Integer_64  := Interfaces.Integer_64 (MPS_UInt);
       Amount_Data    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (NLB) * Sector_Size;
@@ -120,8 +120,20 @@ is
           MPTR  => 0,
           CDW10 => CDW10and11_Temp.CDW10,
           CDW11 => CDW10and11_Temp.CDW11,
-          CDW12 => Cvt_CDW12 ((NLB => NLB, STC => False, PRINFO => 0, FUA => True, LR => False, others => <>)),
-          CDW13 => Cvt_CDW13 (((DSM => (Access_Frequency => 1, Access_Latency => 0, Sequential_Request => False, Incompressible => True), others => <>))),
+          CDW12 => Cvt_CDW12
+            ((NLB   => NLB,
+             STC    => False,
+             PRINFO => 0,
+             FUA    => True,
+             LR     => False,
+             others => <>)),
+          CDW13 => Cvt_CDW13
+            (((DSM =>
+                 (Access_Frequency   => 1,
+                  Access_Latency     => 0,
+                  Sequential_Request => False,
+                  Incompressible     => True),
+               others => <>))),
           CDW14 => 0,
           CDW15 => 0,
           DPRP  => PRP);
@@ -163,10 +175,17 @@ is
           MPTR  => 0,
           CDW10 => CDW10and11_Temp.CDW10,
           CDW11 => CDW10and11_Temp.CDW11,
-          CDW12 => Cvt_CDW12 ((NLB => NLB, DTYPE => 0, STC => False, PRINFO => 0, FUA => True, LR => False, others => <>)),
-          CDW13 => Cvt_CDW13 (
-             (DSM => (Access_Frequency => 1, Access_Latency => 0, Sequential_Request => False, Incompressible => True),
-              DSPEC => 0, Filler => 0)),
+          CDW12 => Cvt_CDW12
+            ((NLB   => NLB,
+             DTYPE  => 0,
+             STC    => False,
+             PRINFO => 0,
+             FUA    => True,
+             LR     => False,
+             others => <>)),
+          CDW13 => Cvt_CDW13 ((DSM => (Access_Frequency => 1, Access_Latency => 0,
+                                                   Sequential_Request => False, Incompressible => True),
+                                           DSPEC => 0, Filler => 0)),
           CDW14 => 0,
           CDW15 => 0,
           DPRP  => PRP);
@@ -204,7 +223,14 @@ is
           MPTR  => 0,
           CDW10 => CDW10and11_Temp.CDW10,
           CDW11 => CDW10and11_Temp.CDW11,
-          CDW12 => Cvt_CDW12 ((NLB => NLB, STC => False, DEAC => True, PRINFO => 0, FUA => True, LR => False, others => <>)),
+          CDW12 => Cvt_CDW12
+            ((NLB   => NLB,
+             STC    => False,
+             DEAC   => True,
+             PRINFO => 0,
+             FUA    => True,
+             LR     => False,
+             others => <>)),
           CDW13 => 0,
           CDW14 => 0,
           CDW15 => 0,

@@ -5,7 +5,7 @@ with NVMe.Host;
 
 with Storage_Interface;
 
-package NVMe.IOCommandSet
+package NVMe.IO_Command_Set
 is
 
    use type Interfaces.Unsigned_8;
@@ -50,7 +50,7 @@ is
    --- Read Command
    -------------------------------------------------------------------------
 
-   procedure CreateRead_Command
+   procedure Create_Read_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        SLBA           :        Interfaces.Unsigned_64;   -- Starting Logical Block Address (LBA)
@@ -63,7 +63,7 @@ is
    --- Write Command
    -------------------------------------------------------------------------
 
-   procedure CreateWrite_Command
+   procedure Create_Write_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        SLBA           :        Interfaces.Unsigned_64;   -- Starting Logical Block Address (LBA)
@@ -76,7 +76,7 @@ is
    --- Write Zeroes Command
    -------------------------------------------------------------------------
 
-   procedure CreateWrite_Zeroes_Command
+   procedure Create_Write_Zeroes_Command
       (CMD_Identifier  : in out Interfaces.Unsigned_16; -- Command Identifier
        SLBA            :        Interfaces.Unsigned_64; -- Starting Logical Block Address (LBA)
        NLB             :        Interfaces.Unsigned_16; -- Number of Logical Blocks
@@ -87,7 +87,7 @@ is
    --- Flush Command
    -------------------------------------------------------------------------
 
-   procedure CreateFlush_Command
+   procedure Create_Flush_Command
       (CMD_Identifier  : in out Interfaces.Unsigned_16; -- Command Identifier
        Command         :    out SubmissionQ.IO_Command);
 
@@ -95,12 +95,12 @@ private
 
    -- Read & Write CMD
 
-   type CDW10and11_RW is record
+   type CDW10_and_11_RW is record
       CDW10 : Interfaces.Unsigned_32;
       CDW11 : Interfaces.Unsigned_32;
    end record with
       Size => 64;
-   for CDW10and11_RW use record
+   for CDW10_and_11_RW use record
       CDW10 at 0 range 0 .. 31;
       CDW11 at 4 range 0 .. 31;
    end record;
@@ -197,4 +197,4 @@ private
       LR     at 3 range 7 ..  7;
    end record;
 
-end NVMe.IOCommandSet;
+end NVMe.IO_Command_Set;

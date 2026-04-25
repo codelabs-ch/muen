@@ -1,7 +1,7 @@
 with Ada.Unchecked_Conversion;
 with System;
 
-package body NVMe.IOCommandSet
+package body NVMe.IO_Command_Set
 is
 
    ----------------------------
@@ -89,17 +89,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CreateRead_Command
+   procedure Create_Read_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;              -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        SLBA           :        Interfaces.Unsigned_64;              -- Starting Logical Block Address (LBA)
        NLB            :        Interfaces.Unsigned_16;              -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
-      CDW10and11_Temp : CDW10and11_RW;
+      CDW10and11_Temp : CDW10_and_11_RW;
       PRP : SubmissionQ.PRP_Data_Ptr;
 
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10_and_11_RW);
       function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Read, Interfaces.Unsigned_32);
       function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Read, Interfaces.Unsigned_32);
 
@@ -140,21 +140,21 @@ is
 
       CMD_Identifier := CMD_Identifier + 1;
 
-   end CreateRead_Command;
+   end Create_Read_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateWrite_Command
+   procedure Create_Write_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;              -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        SLBA           :        Interfaces.Unsigned_64;              -- Starting Logical Block Address (LBA)
        NLB            :        Interfaces.Unsigned_16;              -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
-      CDW10and11_Temp : CDW10and11_RW;
+      CDW10and11_Temp : CDW10_and_11_RW;
       PRP             : SubmissionQ.PRP_Data_Ptr;
 
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10_and_11_RW);
       function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Write, Interfaces.Unsigned_32);
       function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Write, Interfaces.Unsigned_32);
 
@@ -192,20 +192,20 @@ is
 
       CMD_Identifier := CMD_Identifier + 1;
 
-   end CreateWrite_Command;
+   end Create_Write_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateWrite_Zeroes_Command
+   procedure Create_Write_Zeroes_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;          -- Command Identifier
        SLBA           :        Interfaces.Unsigned_64;          -- Starting Logical Block Address (LBA)
        NLB            :        Interfaces.Unsigned_16;          -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
-      CDW10and11_Temp : CDW10and11_RW;
+      CDW10and11_Temp : CDW10_and_11_RW;
 
       function Cvt_CDW12 is new Ada.Unchecked_Conversion (CDW12_Write_Zeroes, Interfaces.Unsigned_32);
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10_and_11_RW);
 
    begin
 
@@ -238,11 +238,11 @@ is
 
       CMD_Identifier := CMD_Identifier + 1;
 
-   end CreateWrite_Zeroes_Command;
+   end Create_Write_Zeroes_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateFlush_Command
+   procedure Create_Flush_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;          -- Command Identifier
        Command        :    out SubmissionQ.IO_Command)
    is
@@ -268,5 +268,5 @@ is
 
       CMD_Identifier := CMD_Identifier + 1;
 
-   end CreateFlush_Command;
-end NVMe.IOCommandSet;
+   end Create_Flush_Command;
+end NVMe.IO_Command_Set;

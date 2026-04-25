@@ -1,7 +1,7 @@
 with SK.CPU;
 
 with NVMe.SubmissionQ;
-with NVMe.IOCommandSet;
+with NVMe.IO_Command_Set;
 with NVMe.Host;
 
 with Log;
@@ -160,7 +160,7 @@ is
 
       PRP_Data_Ptr.E1 := Address;
 
-      NVMe.IOCommandSet.CreateRead_Command
+      NVMe.IO_Command_Set.Create_Read_Command
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           DPTR            => PRP_Data_Ptr,
           SLBA            => SLBA,
@@ -194,7 +194,7 @@ is
 
       PRP_Data_Ptr.E1 := Address;
 
-      NVMe.IOCommandSet.CreateWrite_Command
+      NVMe.IO_Command_Set.Create_Write_Command
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           DPTR            => PRP_Data_Ptr,
           SLBA            => SLBA,
@@ -224,7 +224,7 @@ is
    begin
       Dummy_Use (Dev_Id);
 
-      NVMe.IOCommandSet.CreateWrite_Zeroes_Command
+      NVMe.IO_Command_Set.Create_Write_Zeroes_Command
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           SLBA            => SLBA,
           NLB             => Interfaces.Unsigned_16'Mod (NLB),
@@ -281,7 +281,7 @@ is
       Dummy_Use (Dev_Id);
 
       -- TODO Check for IO SQ Tail Pointer / Head Pointer
-      NVMe.IOCommandSet.CreateFlush_Command (NVMe.Host.CMD_Identifier_IO, IO_CMD);
+      NVMe.IO_Command_Set.Create_Flush_Command (NVMe.Host.CMD_Identifier_IO, IO_CMD);
       NVMe.Host.Process_IO_Command (IO_CMD, NVMe_Status);
 
       if NVMe_Status = NVMe.OK then

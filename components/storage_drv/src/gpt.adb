@@ -9,7 +9,7 @@ with Storage_Drv_Cspecs_Wrapper;
 package body Gpt
 is
    -------------------------------------------------------------------------
-   -- Named Address Numbers
+   -- Address constants
    -------------------------------------------------------------------------
 
    GPT_Offset  : constant := 0;

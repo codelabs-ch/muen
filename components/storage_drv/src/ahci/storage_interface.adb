@@ -72,8 +72,8 @@ is
    is
    begin
       Ports := (others =>
-         (Chan_Idx         => 0,
-          Devs             => (others => Internal_Device_Type'(
+         (Chan_Idx => 0,
+          Devs     => (others => Internal_Device_Type'(
                Ahci_Port     => 0,
                Partition     => Ports_Config.Null_Partition,
                Sector_Offset => 0,

@@ -173,8 +173,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Probe
-      (Port_ID : Ports_Config.Port_Range)
+   procedure Probe (Port_ID : Ports_Config.Port_Range)
    with
       Pre => Musinfo.Instance.Is_Valid
    is

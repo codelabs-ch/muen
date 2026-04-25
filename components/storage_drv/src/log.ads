@@ -26,18 +26,23 @@ with Muenblock;
 package Log
 is
 
+   -- Output partition information of given partition table.
    procedure Print_MBR_Partition_Table (Table : Partitions.Partition_Table_Type);
 
    subtype Bool_Image is String (1 .. 5);
 
+   -- Output True/False String for given Boolean.
    function Boolean_Image (B : Boolean) return Bool_Image;
 
+   -- Output metadata of given GPT partition entry.
    procedure Print_GPT_Partition_Table_Entry
       (Partition : Gpt.Partition_Entry_Type;
        Index     : Partitions.Partition_Array_Length);
 
+   -- Output data of given GPT header.
    procedure Print_GPT_Header (Header : Gpt.GPT_Header_Type);
 
+   -- Output metadate of given muenblock request.
    procedure Print_Request (Request : Muenblock.Block_Request_Type);
 
    --  Initialize debug log.
@@ -46,15 +51,16 @@ is
    --  Output given string.
    procedure Put_String (Item : String);
 
-   -- Output new line
+   -- Output new line.
    procedure New_Line;
 
    --  Output given string and append a new line.
    procedure Put_Line (Item : String);
 
+   -- Output given character.
    procedure Write_Character (Item : Character);
 
-   --  Output a given Bit_Array
+   --  Output a given Bit_Array.
    procedure Put_Bit_Array (Item : Bit_Array);
 
    --  Output PCI device information.

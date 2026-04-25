@@ -5,7 +5,7 @@ package body NVMe.IOCommandSet
 is
 
    ----------------------------
-   -- Named Address Numbers
+   -- Address constants
    ----------------------------
    -- Queue Memory
    PRP_List_Offset  : constant := 16#0009_0000#;

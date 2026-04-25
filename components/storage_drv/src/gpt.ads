@@ -16,7 +16,7 @@ is
       Platform_Required    : Boolean;
       EFI_Should_Ignore    : Boolean;
       Legacy_Bios_Bootable : Boolean;
-      -- remainder is reserved / partition specifc (define if needed)
+      -- Remainder is reserved / partition specific (define if needed)
       Reserved             : Storage_Interface.Bit_Array (3 .. 63);
    end record
    with

@@ -173,8 +173,9 @@ is
                W := Test_Write_Ahci (I);
                if R /= W then
                   Log.Put_Line
-                    ("Data did not match for test " & SK.Strings.Img_Dec (SHM_Array_Index) &
-                     "! Offset:" &
+                    ("Data did not match for test "
+                     & SK.Strings.Img_Dec (SK.Word64 (SHM_Array_Index))
+                     & "! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)
@@ -188,8 +189,9 @@ is
                W := Test_Write_Nvme (I);
                if R /= W then
                   Log.Put_Line
-                    ("Data did not match for test " & SK.Strings.Img_Dec (SHM_Array_Index) &
-                     "! Offset:" &
+                    ("Data did not match for test "
+                     & SK.Strings.Img_Dec (SK.Word64 (SHM_Array_Index))
+                     & "! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)

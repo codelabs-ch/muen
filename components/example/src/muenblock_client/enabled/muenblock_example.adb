@@ -161,7 +161,7 @@ is
       Volatile,
       Async_Writers,
       Address => System'To_Address
-         (Example_Component.Memory_Arrays.Blockdev_Shm2_Address_Base + Example_Component.Memory_Arrays.Blockdev_Shm2_Element_Size + 2);
+         (Example_Component.Memory_Arrays.Blockdev_Shm2_Address_Base + Example_Component.Memory_Arrays.Blockdev_Shm2_Element_Size);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

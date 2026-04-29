@@ -315,6 +315,7 @@ is
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        Command        :    out SubmissionQ.Admin_Command)
    is
+      SMART_Log_Page_DWords : constant := 127;
    begin
 
       Create_Get_Log_Page_Command
@@ -323,7 +324,7 @@ is
           LID            => 2,
           LSP            => 0,
           RAE            => False,
-          NUMDL          => 128,
+          NUMDL          => SMART_Log_Page_DWords,
           NUMDU          => 0,
           LogSpecificID  => 0,
           Command        => Command);

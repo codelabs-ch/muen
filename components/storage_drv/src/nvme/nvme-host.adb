@@ -353,7 +353,7 @@ is
          Reserved                        => (False, False));
 
    begin
-
+      SMART_Status := Undefined;
       PRP_D_Ptr.E1 := Address;
 
       Admin_Command_Set.Create_SMART_Health_Log_Page_Command
@@ -363,7 +363,6 @@ is
       Process_Admin_Command (Admin_CMD, NVMe_Status);
 
       if NVMe_Status /= OK then
-         SMART_Status := Undefined;
          return;
       end if;
 
@@ -385,14 +384,16 @@ is
          begin
             if Critical_Warning = No_Warning then
                SMART_Status := OK;
-            elsif Critical_Warning.Available_Space_Below_Thresh then
+            elsif Critical_Warning.Available_Space_Below_Thresh
+               or else Critical_Warning.Temperature_Warning
+               or else Critical_Warning.Reliability_Degraded
+               or else Critical_Warning.Read_Only_Mode_Active
+               or else Critical_Warning.Backup_Device_Failure
+               or else Critical_Warning.Persist_Memory_Region_Read_Only
+            then
                SMART_Status := Threshold_Exceeded;
-            else
-               SMART_Status := Undefined;
             end if;
          end;
-      else
-         SMART_Status := Undefined;
       end if;
    end Get_Smart;
 

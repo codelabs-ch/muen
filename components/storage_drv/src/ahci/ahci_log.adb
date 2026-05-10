@@ -34,8 +34,8 @@ is
      (ID  : Ports_Config.Port_Range;
       Len : Integer)
    is
-      Local32       : Interfaces.Unsigned_32;
-      Start_Index   : constant Integer := Integer (ID) * 16#40#;
+      Local32     : Interfaces.Unsigned_32;
+      Start_Index : constant Integer := Integer (ID) * 16#40#;
    begin
       for I in Integer range Start_Index .. Start_Index + Len loop
          Local32 := Cmd_Table_Buf (I);
@@ -67,8 +67,8 @@ is
      (ID  : Ports_Config.Port_Range;
       Len : Integer)
    is
-      Local32      : Interfaces.Unsigned_32;
-      Start_Index  : constant Integer := Integer (ID) * 16#100#;
+      Local32     : Interfaces.Unsigned_32;
+      Start_Index : constant Integer := Integer (ID) * 16#100#;
    begin
       for I in Integer range Start_Index .. Start_Index + Len loop
          Local32 := Cmd_List_Buf (I);

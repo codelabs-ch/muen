@@ -42,7 +42,7 @@ is
       Reserved2 : Storage_Interface.Bit_Array (0 .. 2);
    end record
    with
-      Size => 64,
+      Size        => 64,
       Object_Size => 64;
 
    for CAP_Part use record
@@ -72,7 +72,7 @@ is
       Major : Interfaces.Unsigned_16; -- NVMe Version >= 1.2.1
    end record
    with
-      Size => 32,
+      Size        => 32,
       Object_Size => 32;
 
    for VS_Part use record
@@ -95,7 +95,7 @@ is
       Reserved2 : Storage_Interface.Bit_Array (0 .. 6);
    end record
    with
-      Size => 32,
+      Size        => 32,
       Object_Size => 32;
 
    for CC_Part use record
@@ -193,7 +193,7 @@ is
       -- and thus ignored.
    end record
    with
-      Size => 864,
+      Size        => 864,
       Object_Size => 864;
 
    for Controller_Properties use record
@@ -264,7 +264,7 @@ is
       Reserved_10 : Storage_Interface.Byte_Array (0 .. 8);
    end record
    with
-      Size => 256,
+      Size        => 256,
       Object_Size => 256;
 
    for PSD use record
@@ -386,7 +386,7 @@ is
       PSD0       : Power_State_Descriptors;     -- Power State 0 Descriptors
    end record
    with
-      Size => 3072 * 8,
+      Size        => 3072 * 8,
       Object_Size => 3072 * 8;
 
    for Identify_Controller use record
@@ -488,7 +488,7 @@ is
       Reserved                : Storage_Interface.Bit_Array (3 .. 63);
    end record
    with
-      Size => 64,
+      Size        => 64,
       Object_Size => 64;
 
    for IO_CMD_Set_Vector use record
@@ -526,7 +526,7 @@ is
       Reserved : Storage_Interface.Bit_Array (26 .. 31);
    end record
    with
-      Size => 32,
+      Size        => 32,
       Object_Size => 32;
 
    for LBA_Format use record
@@ -582,7 +582,7 @@ is
       LBA_List   : LBA_Format_List;
    end record
    with
-      Size => 384 * 8,
+      Size        => 384 * 8,
       Object_Size => 384 * 8;
 
    for Identify_Namespace use record
@@ -645,7 +645,7 @@ is
       Address2     : Interfaces.Unsigned_32;
    end record
    with
-      Size => 64,
+      Size        => 64,
       Object_Size => 64;
    for BAR_64Bit use record
       RegionType   at 0 range 0 ..  0;

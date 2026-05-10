@@ -42,7 +42,7 @@ is
 
       CID    : Interfaces.Unsigned_16;      -- Command Identifier
       P      : Boolean;                     -- Phase Tag
-      Status : Status_Field;                 -- Status Field
+      Status : Status_Field;                -- Status Field
    end record
    with
      Size => 16 * 8;

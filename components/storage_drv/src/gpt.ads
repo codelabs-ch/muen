@@ -20,7 +20,7 @@ is
       Reserved             : Storage_Interface.Bit_Array (3 .. 63);
    end record
    with
-      Size => 64,
+      Size        => 64,
       Object_Size => 64;
 
    for Partition_Attributes use record
@@ -33,15 +33,15 @@ is
    type Partition_Name_String is new String (1 .. 72);
 
    type Partition_Entry_Type is record
-      Partition_Type_GUID   : Interfaces.Unsigned_128;       -- Mixed Endian
-      Unique_Partition_GUID : Interfaces.Unsigned_128;       -- Mixed Endian
-      Starting_LBA          : Interfaces.Unsigned_64;        -- Little Endian
-      Ending_LBA            : Interfaces.Unsigned_64;        -- inclusive, usually odd
+      Partition_Type_GUID   : Interfaces.Unsigned_128; -- Mixed Endian
+      Unique_Partition_GUID : Interfaces.Unsigned_128; -- Mixed Endian
+      Starting_LBA          : Interfaces.Unsigned_64;  -- Little Endian
+      Ending_LBA            : Interfaces.Unsigned_64;  -- inclusive, usually odd
       Attributes            : Partition_Attributes;
       Partition_Name        : Partition_Name_String;   -- 36 Chars UTF-16LE (wide_str)--> Decode!
    end record
    with
-      Size => 1024,
+      Size        => 1024,
       Object_Size => 1024;
 
    for Partition_Entry_Type use record
@@ -61,16 +61,16 @@ is
       Reserved                    : Storage_Interface.Byte_Array (0 .. 3); -- reserved (zeroed)
       My_LBA                      : Interfaces.Unsigned_64;
       Alternate_LBA               : Interfaces.Unsigned_64;
-      First_Usable_LBA            : Interfaces.Unsigned_64;    -- primary partition table last LBA + 1
-      Last_Usable_LBA             : Interfaces.Unsigned_64;    -- secondary partition table first LBA - 1
-      Disk_GUID                   : Interfaces.Unsigned_128;   -- Mixed Endian
-      Partition_Entry_LBA         : Interfaces.Unsigned_64;    -- LBA of start of partition entry array
-      Number_Of_Partition_Entries : Interfaces.Unsigned_32;    -- usually   2
-      Size_Of_Partition_Entry     : Interfaces.Unsigned_32;    -- usually 128
+      First_Usable_LBA            : Interfaces.Unsigned_64;  -- primary partition table last LBA + 1
+      Last_Usable_LBA             : Interfaces.Unsigned_64;  -- secondary partition table first LBA - 1
+      Disk_GUID                   : Interfaces.Unsigned_128; -- Mixed Endian
+      Partition_Entry_LBA         : Interfaces.Unsigned_64;  -- LBA of start of partition entry array
+      Number_Of_Partition_Entries : Interfaces.Unsigned_32;  -- usually   2
+      Size_Of_Partition_Entry     : Interfaces.Unsigned_32;  -- usually 128
       Partition_Entry_Array_CRC32 : Interfaces.Unsigned_32;
    end record
    with
-      Size => 736,
+      Size        => 736,
       Object_Size => 736; -- 92 Byte
 
    for GPT_Header_Type use record
@@ -103,7 +103,7 @@ is
       Entry_Array        : Entry_Array_Type;
    end record
    with
-      Size => 135168,
+      Size        => 135168,
       Object_Size => 135168;
 
    for Primary_GPT use record

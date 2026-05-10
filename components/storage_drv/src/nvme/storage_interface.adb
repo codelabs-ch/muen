@@ -280,7 +280,8 @@ is
    begin
       Dummy_Use (Dev_Id);
 
-      -- TODO Check for IO SQ Tail Pointer / Head Pointer
+      --  Process_IO_Command is synchronous, so the IOSQ is empty by the time
+      --  Sync is called. No drain check needed.
       NVMe.IO_Command_Set.Create_Flush_Command (NVMe.Host.CMD_Identifier_IO, IO_CMD);
       NVMe.Host.Process_IO_Command (IO_CMD, NVMe_Status);
 

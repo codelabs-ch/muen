@@ -229,7 +229,7 @@ is
       use type Interfaces.Unsigned_64;
       use type MB.Request_Kind_Type;
 
-      Request  : MB.Block_Request_Type  := MB.Null_Request;
+      Request  : MB.Block_Request_Type := MB.Null_Request;
       Response : MB.Block_Response_Type;
       Error    : Boolean;
    begin

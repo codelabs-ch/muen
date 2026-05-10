@@ -101,7 +101,7 @@ is
      (GNATprove, On,
       "indirect writes to * through a potential alias are ignored");
 
-   --  CoStorage_Interface.MBine requests from the client to maximize the request length to the
+   --  Combine requests from the client to maximize the request length to the
    --  device. We need to store the request tags to answer the requests after
    --  data transfer finished.
 

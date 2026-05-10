@@ -134,7 +134,7 @@ is
 
       if CRC32_Calc /= CRC32_Check then
          Success := False;
-         Log.Put_Line ("GPT: CRC of " & (if Is_Alternate_GPT then "alternate GPT entry array size wrong" else "GPT entry array size wrong"));
+         Log.Put_Line ("GPT: CRC of " & (if Is_Alternate_GPT then "alternate GPT entry array wrong" else "GPT entry array wrong"));
       end if;
    end Calc_Partition_Array_CRC32;
 
@@ -152,6 +152,7 @@ is
       Success := True;
 
       if Is_Alternate_GPT then
+         -- Zero out crc header field per UEFI spec.
          pragma Warnings (GNATprove, off, "unused assignment");
          Alternate_GPT_Header.Header_CRC32 := 0;
          pragma Warnings (GNATprove, on, "unused assignment");
@@ -165,6 +166,7 @@ is
          end;
          CRC32_Calc := CRC32.Get_Value (CRC);
 
+         -- Restore crc header field after calculation per UEFI spec.
          Alternate_GPT_Header.Header_CRC32 := CRC32_Check;
 
          if CRC32_Calc /= CRC32_Check then
@@ -291,7 +293,7 @@ is
 
          -- Check if usable LBA range is within disk
          if GPT_Primary_Header.First_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
-            Log.Put_Line ("GPT: First uable LBA is invalid");
+            Log.Put_Line ("GPT: First usable LBA is invalid");
             return;
          end if;
          if GPT_Primary_Header.Last_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
@@ -423,7 +425,7 @@ is
             Log.Put_Line ("GPT: Primary and alternate GPT headers are correct.");
          end;
 
-         -- Check Partiton Entry Array CRC
+         -- Check Partition Entry Array CRC
          -- load Entries
 
          Storage_Interface.Execute_Read_Command

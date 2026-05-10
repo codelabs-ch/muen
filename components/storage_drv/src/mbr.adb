@@ -31,8 +31,8 @@ is
 
    type CHS_Address_Type is record
       Head          : Interfaces.Unsigned_8;
-      Sector        : Unsigned_6;
-      Cylinder_High : Unsigned_2;
+      Sector        : Storage_Interface.Unsigned_6;
+      Cylinder_High : Storage_Interface.Unsigned_2;
       Cylinder_Low  : Interfaces.Unsigned_8;
    end record
    with
@@ -75,8 +75,8 @@ is
    subtype Partition_1_4_Array is Partition_Array (Partition_1_4_Range);
 
    type MBR_Type is record
-      Bootstrap_Code : Byte_Array (0 .. 439);
-      Reserved       : Bit_Array (0 .. 47);
+      Bootstrap_Code : Storage_Interface.Byte_Array (0 .. 439);
+      Reserved       : Storage_Interface.Bit_Array (0 .. 47);
       Partition_1_4  : Partition_1_4_Array;
       Boot_Signature : Interfaces.Unsigned_16;
    end record
@@ -108,10 +108,12 @@ is
 
    procedure Parse
       (ID         :     Ports_Config.Port_Range;
-       Part_Table : out Partition_Table_Type)
+       Part_Table : out Partitions.Partition_Table_Type)
    is
 
-      Ret          : Status_Type;
+      use type Storage_Interface.Status_Type;
+
+      Ret          : Storage_Interface.Status_Type;
       Sig          : Interfaces.Unsigned_16;
       Sector       : Interfaces.Unsigned_64 := 0;
       Start_Lba    : Interfaces.Unsigned_64;
@@ -138,9 +140,9 @@ is
       ---------------------------------------------------------------------
 
    begin
-      Part_Table := Null_Partition_Table;
+      Part_Table := Partitions.Null_Partition_Table;
       Parse_Loop : loop
-         --  read sector containing a MBR / EBR entry
+         --  Read sector containing a MBR / EBR entry.
          Storage_Interface.Execute_Read_Command
            (Address => Storage_Interface.DMA_Mem_Base_Address,
             SLBA    => Sector,
@@ -149,8 +151,8 @@ is
             Status  => Ret);
 
          Sig := MBR_Entry.Boot_Signature;
-         if Ret /= OK or Sig /= 16#aa55# then
-            if Ret /= OK then
+         if Ret /= Storage_Interface.OK or Sig /= 16#aa55# then
+            if Ret /= Storage_Interface.OK then
                Log.Put_Line ("Read failed");
             end if;
             if Sig /= 16#aa55# then
@@ -166,7 +168,7 @@ is
          if Partition.Partition_Type = Partitions.PARTITION_TYPE_PROTECTIVE
             or Partition.Partition_Type = Partitions.PARTITION_TYPE_EFI
          then
-            Log.Put_Line ("Found GPT partiton");
+            Log.Put_Line ("Found GPT partition");
             Gpt.Parse (ID, Part_Table);
             return;
          end if;
@@ -177,8 +179,8 @@ is
          Stop_Parsing := True;
 
          for I in Natural range 1 .. Max_Entries loop
-            pragma Loop_Invariant (Found < Natural'Last - Partition_Array_Length'Last);
-            pragma Loop_Invariant (Part_Table.Count + Found <= Partition_Array_Length'Last);
+            pragma Loop_Invariant (Found < Natural'Last - Partitions.Partition_Array_Length'Last);
+            pragma Loop_Invariant (Part_Table.Count + Found <= Partitions.Partition_Array_Length'Last);
 
             Partition := MBR_Entry.Partition_1_4 (I);
             if Partition.Partition_Type /= Partitions.PARTITION_TYPE_EMPTY
@@ -217,7 +219,7 @@ is
                then
                   Log.Put_Line
                     ("MBR: Not enough entries to store partition table");
-                  Part_Table := Null_Partition_Table;
+                  Part_Table := Partitions.Null_Partition_Table;
                   return;
                end if;
 

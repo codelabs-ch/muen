@@ -17,8 +17,8 @@
 
 with Musinfo.Instance;
 
-with Partitions; use Partitions;
-with Storage_Interface; use Storage_Interface;
+with Partitions;
+with Storage_Interface;
 with Ports_Config;
 
 package Mbr
@@ -26,7 +26,7 @@ is
    --  Parse the MBR (in Sector 0) of the given device
    procedure Parse
       (ID         :     Ports_Config.Port_Range;
-       Part_Table : out Partition_Table_Type)
+       Part_Table : out Partitions.Partition_Table_Type)
    with
       Pre => Musinfo.Instance.Is_Valid and then
              Storage_Interface.Is_Valid;

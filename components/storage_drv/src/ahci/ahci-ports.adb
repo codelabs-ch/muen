@@ -19,9 +19,8 @@
 
 with SK.Strings;
 
-with Ahci.Delays;
-
 with Ahci_Log;
+with Delays;
 with Log;
 
 package body Ahci.Ports

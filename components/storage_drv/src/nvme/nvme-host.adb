@@ -5,6 +5,7 @@ with System;
 with SK.Strings;
 
 with Log;
+with Delays;
 with NVMe_Log;
 
 with NVMe.Admin_Command_Set;
@@ -244,21 +245,44 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma Warnings (GNATprove, Off, "subprogram ""Wait_For_Ready"" has no effect");
-   procedure Wait_For_Ready (Should_Be : Boolean)
-   is
-   begin
-      declare
-         Ready : Boolean := not Should_Be;
-      begin
-         while Ready /= Should_Be
-         loop
-            Ready := CProp.CSTS.RDY;
-         end loop;
-      end;
+   --  Per-command default deadlines Linux uses.
+   Admin_Cmd_Timeout_Ms : constant := 5_000;
+   IO_Cmd_Timeout_Ms    : constant := 30_000;
 
+   -------------------------------------------------------------------------
+
+   --  Spin until CSTS.RDY equals Should_Be, bounded by CAP.TO * 500 ms
+   --  (NVMe Base Spec §3.1.4.1).
+   --  Returns Timed_Out = True if the bound was hit before RDY transitioned,
+   --  in which case the controller is considered unresponsive.
+   procedure Wait_For_Ready
+      (Should_Be :     Boolean;
+       Timed_Out : out Boolean)
+   with
+       Pre => Musinfo.Instance.Is_Valid
+   is
+      --  CAP.TO units are 500 ms. A reported value of 0 is unspecified;
+      --  treat as one unit (500 ms) per common-practice host drivers.
+      CAP_TO   : constant Interfaces.Unsigned_8  := CProp.CAP.TO;
+      Units    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Max
+         (1, Interfaces.Unsigned_64 (CAP_TO));
+      Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+      Deadline : constant Interfaces.Unsigned_64 := Now_Msec + Units * 500;
+      Ready    : Boolean := not Should_Be;
+   begin
+      Timed_Out := False;
+      while Ready /= Should_Be loop
+         declare
+            Current_Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+         begin
+            if Current_Now_Msec >= Deadline then
+               Timed_Out := True;
+               return;
+            end if;
+         end;
+         Ready := CProp.CSTS.RDY;
+      end loop;
    end Wait_For_Ready;
-   pragma Warnings (GNATprove, On, "subprogram ""Wait_For_Ready"" has no effect");
 
    -------------------------------------------------------------------------
 
@@ -285,6 +309,8 @@ is
       use type CompletionQ.Entry_Queue_Range;
       use type SubmissionQ.Entry_Queue_Range;
 
+      Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+      Deadline : constant Interfaces.Unsigned_64 := Now_Msec + Admin_Cmd_Timeout_Ms;
       Temp_CQE : CompletionQ.CQE;
    begin
 
@@ -301,7 +327,19 @@ is
       loop
          Temp_CQE := ACQ (ACQ_Index);
          exit when Temp_CQE.P /= ACQ_Phase_Tag;
-         -- Todo Timeout
+         declare
+            Current_Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+         begin
+            if Current_Now_Msec >= Deadline then
+               Log.Put_String ("Error: Admin CMD timed out after ");
+               Log.Put_String (SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Admin_Cmd_Timeout_Ms)));
+               Log.Put_String (" ms: ");
+               NVMe_Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
+               Log.New_Line;
+               Status := Timeout;
+               return;
+            end if;
+         end;
       end loop;
       if Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC = 0 then
          Log.Put_String ("Successfully executed admin command ");
@@ -406,6 +444,8 @@ is
       use type CompletionQ.Entry_Queue_Range;
       use type SubmissionQ.Entry_Queue_Range;
 
+      Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+      Deadline : constant Interfaces.Unsigned_64 := Now_Msec + IO_Cmd_Timeout_Ms;
       Temp_CQE : CompletionQ.CQE;
    begin
 
@@ -422,6 +462,19 @@ is
       loop
          Temp_CQE := IOCQ (IOCQ_Index);
          exit when Temp_CQE.P /= IOCQ_Phase_Tag and Temp_CQE.CID = IOCmd.CID;
+         declare
+            Current_Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+         begin
+            if Current_Now_Msec >= Deadline then
+               Log.Put_String ("Error: IO CMD timed out after ");
+               Log.Put_String (SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_Cmd_Timeout_Ms)));
+               Log.Put_String (" ms: ");
+               NVMe_Log.Put_NVMe_IOCMD_Image (IOCmd.OPC);
+               Log.New_Line;
+               Status := Timeout;
+               return;
+            end if;
+         end;
       end loop;
 
       if Temp_CQE.CID = IOCmd.CID and Temp_CQE.Status.SC = 0 then
@@ -552,7 +605,15 @@ is
             end if;
       end;
 
-      Wait_For_Ready (Should_Be => False);
+      declare
+         Timed_Out : Boolean;
+      begin
+         Wait_For_Ready (Should_Be => False, Timed_Out => Timed_Out);
+         if Timed_Out then
+            Log.Put_Line ("NVME: Timed out waiting for CSTS.RDY=0 after CC.EN=0");
+            return;
+         end if;
+      end;
 
       ---------------------------------------------------
       --- 2. Configuring Admin Queue Attributes, if needed
@@ -668,8 +729,15 @@ is
       --- 6. Waiting for the Controller
       ---------------------------------------------------
 
-      Wait_For_Ready (Should_Be => True);
-
+      declare
+         Timed_Out : Boolean;
+      begin
+         Wait_For_Ready (Should_Be => True, Timed_Out => Timed_Out);
+         if Timed_Out then
+            Log.Put_Line ("NVME: Timed out waiting for CSTS.RDY=1 after CC.EN=1");
+            return;
+         end if;
+      end;
       Log.Put_Line ("Controller is now ready to process commands");
 
       ---------------------------------------------------
@@ -1116,18 +1184,30 @@ is
          CProp.CC    := Temp_CC;
       end;
 
-      loop
-         declare
-            use type Storage_Interface.Unsigned_2;
+      declare
+         use type Storage_Interface.Unsigned_2;
 
-            Temp_SHST : constant Storage_Interface.Unsigned_2 := CProp.CSTS.SHST;
-            Temp_ST   : constant Boolean := CProp.CSTS.ST;
-         begin
-            pragma Warnings (GNATprove, Off, "statement has no effect");
-            exit when Temp_SHST = 2 and not Temp_ST;
-            pragma Warnings (GNATprove, On, "statement has no effect");
-         end;
-      end loop;
+         --  No spec-defined shutdown timeout; use CAP.TO * 500 ms as a
+         --  reasonable proxy (matches Linux's nvme_shutdown_ctrl).
+         CAP_TO   : constant Interfaces.Unsigned_8  := CProp.CAP.TO;
+         Units    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Max (1, Interfaces.Unsigned_64 (CAP_TO));
+         Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+         Deadline : constant Interfaces.Unsigned_64 := Now_Msec + Units * 500;
+      begin
+         loop
+            declare
+               Temp_SHST        : constant Storage_Interface.Unsigned_2 := CProp.CSTS.SHST;
+               Temp_ST          : constant Boolean := CProp.CSTS.ST;
+               Current_Now_Msec : constant Interfaces.Unsigned_64 := Delays.Now_Msec;
+            begin
+               exit when Temp_SHST = 2 and not Temp_ST;
+               if Current_Now_Msec >= Deadline then
+                  Log.Put_Line ("NVME: Timed out waiting for shutdown completion");
+                  exit;
+               end if;
+            end;
+         end loop;
+      end;
 
       Log.Put_Line ("Controller shutdown complete.");
 

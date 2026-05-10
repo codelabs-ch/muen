@@ -18,7 +18,7 @@
 
 with SK.CPU;
 
-package body Ahci.Delays
+package body Delays
 is
 
    use type Interfaces.Unsigned_64;
@@ -56,6 +56,16 @@ is
       Sleep (Amount => Interfaces.Unsigned_64 (Msec),
              Unit   => 1000);
    end M_Delay;
+
+   --  Split into (TSC / TSC_Hz) * 1000 + remainder so the multiplication
+   --  does not overflow on long uptimes.
+   function Now_Msec return Interfaces.Unsigned_64
+   is
+      TSC : constant Interfaces.Unsigned_64 := Musinfo.Instance.TSC_Schedule_Start;
+      Hz  : constant Interfaces.Unsigned_64 := TSC_Hz;
+   begin
+      return (TSC / Hz) * 1_000 + ((TSC mod Hz) * 1_000) / Hz;
+   end Now_Msec;
 
    -------------------------------------------------------------------------
 
@@ -100,4 +110,4 @@ is
              Unit   => 1_000_000);
    end U_Delay;
 
-end Ahci.Delays;
+end Delays;

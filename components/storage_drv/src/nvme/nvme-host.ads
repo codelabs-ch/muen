@@ -1,5 +1,7 @@
 with Interfaces;
 
+with Musinfo.Instance;
+
 with NVMe.SubmissionQ;
 
 with Storage_Interface;
@@ -657,12 +659,13 @@ is
 
    procedure Process_Admin_Command
      (AdminCMD :     SubmissionQ.Admin_Command;
-      Status   : out Status_Type);
+      Status   : out Status_Type)
+   with Pre => Musinfo.Instance.Is_Valid;
 
    procedure Process_IO_Command
      (IOCmd  :     SubmissionQ.IO_Command;
       Status : out Status_Type)
-   with Pre => Is_Valid;
+   with Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
 
@@ -670,7 +673,7 @@ is
      (Address      :     Interfaces.Unsigned_64;
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
-   with Pre => Is_Valid;
+   with Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    function Get_Size return Interfaces.Unsigned_64;
 
@@ -685,7 +688,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Controller_Init (Success : out Boolean)
-   with Pre  => Check_Sector_Size,
+   with Pre  => Musinfo.Instance.Is_Valid and Check_Sector_Size,
         Post => (if Success then Is_Valid);
 
    -------------------------------------------------------------------------
@@ -693,7 +696,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Controller_Shutdown
-   with Pre => Is_Valid;
+   with Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    -------------------------------------------------------------------------
 

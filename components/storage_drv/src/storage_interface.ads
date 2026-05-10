@@ -218,7 +218,7 @@ is
        Dev_Id  : Ports_Config.Port_Range;
        Status  : out Status_Type)
    with
-      Pre => Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    procedure Execute_Write_Command
       (Address : Interfaces.Unsigned_64;
@@ -227,7 +227,7 @@ is
        Dev_Id  : Ports_Config.Port_Range;
        Status  : out Status_Type)
    with
-      Pre => Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    procedure Execute_Discard_Command
       (SLBA    : Interfaces.Unsigned_64;
@@ -235,20 +235,20 @@ is
        Dev_Id  : Ports_Config.Port_Range;
        Status  : out Status_Type)
    with
-      Pre => Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    procedure Check_SMART_Status
       (Address :     Interfaces.Unsigned_64;
        Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Interfaces.Unsigned_64)
    with
-      Pre => Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    procedure Sync
       (Dev_Id :      Ports_Config.Port_Range;
        Status : out  Interfaces.Unsigned_64)
    with
-      Pre => Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Is_Valid;
 
    function Is_Valid return Boolean with Ghost;
 

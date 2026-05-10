@@ -18,9 +18,9 @@
 with Ata;
 
 with Ahci.Commands;
-with Ahci.Delays;
 with Ahci.HBA;
 with Ahci.Ports;
+with Delays;
 
 with Log;
 

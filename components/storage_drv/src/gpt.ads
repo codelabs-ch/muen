@@ -1,5 +1,7 @@
 with Interfaces;
 
+with Musinfo.Instance;
+
 with Partitions;
 with Ports_Config;
 with Storage_Interface;
@@ -117,6 +119,6 @@ is
    procedure Parse
      (ID         :     Ports_Config.Port_Range;
       Part_Table : out Partitions.Partition_Table_Type)
-   with Pre => Storage_Interface.Is_Valid;
+   with Pre => Musinfo.Instance.Is_Valid and Storage_Interface.Is_Valid;
 
 end Gpt;

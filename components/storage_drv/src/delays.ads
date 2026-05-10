@@ -20,7 +20,7 @@ with Interfaces;
 
 with Musinfo.Instance;
 
-package Ahci.Delays
+package Delays
 is
 
    --  Used to model time passing.
@@ -39,9 +39,19 @@ is
    --  Suspend execution of caller for at least Msec milliseconds.
    procedure M_Delay (Msec : Natural)
    with
-      Pre     => Musinfo.Instance.Is_Valid,
-       Global => (Input  => (Musinfo.Instance.State,
-                             Musinfo.Instance.Scheduling_Info),
-                  In_Out => Time_Passes);
+      Pre    => Musinfo.Instance.Is_Valid,
+      Global => (Input  => (Musinfo.Instance.State,
+                            Musinfo.Instance.Scheduling_Info),
+                 In_Out => Time_Passes);
 
-end Ahci.Delays;
+   --  Return a monotonically non-decreasing millisecond timestamp suitable
+   --  for computing deadlines (Now_Msec + N) and comparing them with later
+   --  Now_Msec readings.
+   function Now_Msec return Interfaces.Unsigned_64
+   with
+      Volatile_Function,
+      Global => (Input => (Musinfo.Instance.State,
+                           Musinfo.Instance.Scheduling_Info)),
+      Pre    => Musinfo.Instance.Is_Valid;
+
+end Delays;

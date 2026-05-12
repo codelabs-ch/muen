@@ -57,14 +57,14 @@ is
              Unit   => 1000);
    end M_Delay;
 
-   --  Split into (TSC / TSC_Hz) * 1000 + remainder so the multiplication
-   --  does not overflow on long uptimes.
+   -------------------------------------------------------------------------
+
    function Now_Msec return Interfaces.Unsigned_64
    is
-      TSC : constant Interfaces.Unsigned_64 := Musinfo.Instance.TSC_Schedule_Start;
-      Hz  : constant Interfaces.Unsigned_64 := TSC_Hz;
+      TSC     : constant Interfaces.Unsigned_64 := Musinfo.Instance.TSC_Schedule_Start;
+      TSC_Khz : constant Interfaces.Unsigned_64 := Musinfo.Instance.TSC_Khz;
    begin
-      return (TSC / Hz) * 1_000 + ((TSC mod Hz) * 1_000) / Hz;
+      return TSC / TSC_Khz;
    end Now_Msec;
 
    -------------------------------------------------------------------------

@@ -97,17 +97,14 @@ The content that will be served can be found in the `htdocs` directory of the
 interesting, e.g. an article about your successful adventures with MirageOS and
 Muen. Then don't forget to rebuild the unikernel (see below).
 
-Which IP address the unikernel is supposed to use is configured via the
-`--ipv4*` options that can either be passed as unikernel configure parameters
-or using the `--bootparams` parameter of the `solo5-muen-gencspec.py` script.
-
-To serve the website from 192.168.254.10, build the `static_website_tls`
-unikernel by issuing the following commands in the `muen-mirageos` container:
+To serve the website from 192.168.254.10 (the configured default), build the
+`static_website_tls` unikernel by issuing the following commands in the
+`muen-mirageos` container:
 
   $ docker run -it -v ${PWD}:/mnt ghcr.io/codelabs-ch/muen-mirageos
 
   $ cd mirage-skeleton/applications/static_website_tls
-  $ mirage configure -t muen --ipv4=192.168.254.10/24 --ipv4-gateway=192.168.254.1
+  $ mirage configure -t muen
   $ make
 
 If all goes well an unikernel image called `https.muen` should be present in
@@ -115,6 +112,14 @@ the `dist` directory. Copy this to your host and exit the container:
 
   $ cp dist/https.muen /mnt/
   $ exit
+
+To change the IPv4 address and gateway, use the following `<bootparams>` for
+the unikernel subject in the `mirage-solo5.xml` policy (bob packages
+`muen::x86-systems-policy-src-solo5*`):
+
+```
+<bootparams>--ipv4=192.168.32.3/24 --ipv4-gateway=192.168.32.1</bootparams>
+```
 
 ==== Build System Image
 Build the unikernel with the following bob command. Set the `UNIKERNEL_FILE`

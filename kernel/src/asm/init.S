@@ -117,9 +117,8 @@ lookup_start:
 	cmpl %edx, %eax
 	je apicid_found
 	incl %ecx
-	cmpl %ecx, CPU_COUNT
-	jge apicid_not_found
-	jmp lookup_start
+	cmpl $CPU_COUNT, %ecx
+	jl lookup_start
 
 	// APIC ID not found in mapping table: safe halt
 apicid_not_found:

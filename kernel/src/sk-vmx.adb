@@ -336,7 +336,7 @@ is
       --D @Item List => impl_vmcs_setup_ctrl_steps
       --D Write policy-defined I/O bitmap address to the corresponding VMCS
       --D fields. I/O bitmap B is expected to be located in the next memory page
-      --D after bitmap A (which is enforced by the validtor).
+      --D after bitmap A (which is enforced by the validator).
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
@@ -472,7 +472,7 @@ is
                   Value => Skp.Kernel.Stack_Address);
       --D @Item List => impl_vmcs_setup_host_steps
       --D Set host RIP field to exit address which points to
-      --D \texttt{vmx\_exit\_hander} declared in assembly.
+      --D \texttt{vmx\_exit\_handler} declared in assembly.
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => Exit_Address);
       --D @Item List => impl_vmcs_setup_host_steps

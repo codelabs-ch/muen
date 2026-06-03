@@ -44,14 +44,14 @@ vmx_exit_handler:
 	jmp 2b
 3:
 	call 5f
-4:	/* speculation trap */			\
+4:	/* speculation trap */
 	pause
 	lfence
 	jmp 4b
 5:
 	dec %r15
 	jnz 1b
-	add $(RSB_ENTRIES*8), %rsp;
+	add $(RSB_ENTRIES*8), %rsp
 
 	push %r14
 	xor  %r14, %r14

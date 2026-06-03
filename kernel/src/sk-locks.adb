@@ -36,6 +36,8 @@ is
             Outputs  => (Lock_State_Type'Asm_Output ("=a", Previous_State)),
             Inputs   => (System.Address'Asm_Input
                          ("d", Lock.State'Address)));
+            Clobber  => "memory",
+            Volatile => True);
 
          if Previous_State = Free then
             exit;
@@ -61,6 +63,7 @@ is
       System.Machine_Code.Asm
         (Template => "movl $0, %0",
          Outputs  => (Lock_State_Type'Asm_Output ("=m", Lock.State)),
+         Clobber  => "memory",
          Volatile => True);
    end Release;
 

@@ -31,15 +31,15 @@ is
       Previous_State : Lock_State_Type;
    begin
       loop
+         Previous_State := Locked;
          System.Machine_Code.Asm
-           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx)",
-            Outputs  => (Lock_State_Type'Asm_Output ("=a", Previous_State)),
-            Inputs   => (System.Address'Asm_Input
-                         ("d", Lock.State'Address)));
+           (Template => "lock xchgl %0, %1",
+            Outputs  => (Lock_State_Type'Asm_Output ("+r", Previous_State),
+                         Lock_State_Type'Asm_Output ("+m", Lock.State)),
+            Clobber  => "memory",
+            Volatile => True);
 
-         if Previous_State = Free then
-            exit;
-         end if;
+         exit when Previous_State = Free;
          SK.CPU.Pause;
       end loop;
    end Acquire;
@@ -61,6 +61,7 @@ is
       System.Machine_Code.Asm
         (Template => "movl $0, %0",
          Outputs  => (Lock_State_Type'Asm_Output ("=m", Lock.State)),
+         Clobber  => "memory",
          Volatile => True);
    end Release;
 

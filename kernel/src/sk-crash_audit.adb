@@ -108,12 +108,13 @@ is
       SPARK_Mode => Off
    is
    begin
+      Slot := 1;
       System.Machine_Code.Asm
-        (Template => "movq $1, %%rax; lock xadd %%eax, %0",
-         Outputs  => (Positive'Asm_Output ("=m", Global_Next_Slot),
-                      Positive'Asm_Output ("=a", Slot)),
+        (Template => "lock xaddl %0, %1",
+         Outputs  => (Positive'Asm_Output ("+a", Slot),
+                      Positive'Asm_Output ("+m", Global_Next_Slot)),
          Volatile => True,
-         Clobber  => "cc");
+         Clobber  => "cc,memory");
    end Get_And_Inc;
 
    -------------------------------------------------------------------------
@@ -131,7 +132,7 @@ is
       System.Machine_Code.Asm
         (Template => "lock incq %0",
          Outputs  => (Interfaces.Unsigned_64'Asm_Output
-                       ("=m", Instance.Crash_Info.Header.Crash_Count)),
+                       ("+m", Instance.Crash_Info.Header.Crash_Count)),
          Volatile => True);
    end Atomic_Inc_Crash_Count;
 

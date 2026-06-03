@@ -100,9 +100,10 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// CPUID.0BH:EDX contains the x2APIC ID
+	// CPUID.0BH:EDX (subleaf 0) contains the x2APIC ID
 
 	movl $0xb, %eax
+	xorl %ecx, %ecx
 	cpuid
 
 	leal kernel_cpu_ids, %ebx
@@ -129,13 +130,9 @@ apicid_not_found:
 apicid_found:
 	mov %ecx, %esi
 
-	// set up per-CPU paging by multiplying the local CPU ID by 4 and indexing
-	// into the kernel_pml4_start array to get the PML4 pagetable address.
-	mov %esi, %eax
-	mov $0x4, %edx
-	mul %edx
-	add $kernel_pml4_start, %eax
-	mov (%eax), %edx
+	// set up per-CPU paging by indexing into the kernel_pml4_start array with
+	// the local CPU ID to get the PML4 pagetable address.
+	mov kernel_pml4_start(,%esi,4), %edx
 	mov %edx, %cr3
 
 	// enable IA-32e mode and execute-disable

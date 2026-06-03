@@ -100,9 +100,10 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// CPUID.0BH:EDX contains the x2APIC ID
+	// CPUID.0BH:EDX (subleaf 0) contains the x2APIC ID
 
 	movl $0xb, %eax
+	xorl %ecx, %ecx
 	cpuid
 
 	leal kernel_cpu_ids, %ebx

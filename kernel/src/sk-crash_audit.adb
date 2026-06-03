@@ -108,12 +108,13 @@ is
       SPARK_Mode => Off
    is
    begin
+      Slot := 1;
       System.Machine_Code.Asm
-        (Template => "movl $1, %%eax; lock xaddl %%eax, %0",
-         Outputs  => (Positive'Asm_Output ("=m", Global_Next_Slot),
-                      Positive'Asm_Output ("=a", Slot)),
+        (Template => "lock xaddl %0, %1",
+         Outputs  => (Positive'Asm_Output ("+a", Slot),
+                      Positive'Asm_Output ("+m", Global_Next_Slot)),
          Volatile => True,
-         Clobber  => "cc");
+         Clobber  => "cc,memory");
    end Get_And_Inc;
 
    -------------------------------------------------------------------------

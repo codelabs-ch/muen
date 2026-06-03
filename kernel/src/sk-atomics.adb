@@ -46,10 +46,9 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lock btr %0, (%1)",
-         Inputs   => (Word32'Asm_Input ("r", Word32 (Bit)),
-                      System.Address'Asm_Input
-                        ("r", Atomic'Address)),
+        (Template => "lock btr %1, %0",
+         Inputs   => (Word32'Asm_Input ("r", Word32 (Bit))),
+         Outputs  => (Atomic64_Type'Asm_Output ("+m", Atomic)),
          Clobber  => "memory",
          Volatile => True);
    end Clear;
@@ -103,10 +102,9 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lock bts %0, (%1)",
-         Inputs   => (Word32'Asm_Input ("r", Word32 (Bit)),
-                      System.Address'Asm_Input
-                        ("r", Atomic'Address)),
+        (Template => "lock bts %1, %0",
+         Inputs   => (Word32'Asm_Input ("r", Word32 (Bit))),
+         Outputs  => (Atomic64_Type'Asm_Output ("+m", Atomic)),
          Clobber  => "memory",
          Volatile => True);
    end Set;

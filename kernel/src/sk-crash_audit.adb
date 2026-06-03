@@ -109,7 +109,7 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "movq $1, %%rax; lock xadd %%eax, %0",
+        (Template => "movl $1, %%eax; lock xaddl %%eax, %0",
          Outputs  => (Positive'Asm_Output ("=m", Global_Next_Slot),
                       Positive'Asm_Output ("=a", Slot)),
          Volatile => True,

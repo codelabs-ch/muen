@@ -48,6 +48,7 @@ is
         (Template => "lock xaddb %0, %1",
          Outputs  => (SK.Byte'Asm_Output ("+a", Count),
                       SK.Byte'Asm_Output ("+m", Sense_Barrier.Wait_Count)),
+         Clobber  => "memory",
          Volatile => True);
    end Get_And_Increment;
 

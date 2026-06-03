@@ -132,7 +132,7 @@ is
       System.Machine_Code.Asm
         (Template => "lock incq %0",
          Outputs  => (Interfaces.Unsigned_64'Asm_Output
-                       ("=m", Instance.Crash_Info.Header.Crash_Count)),
+                       ("+m", Instance.Crash_Info.Header.Crash_Count)),
          Volatile => True);
    end Atomic_Inc_Crash_Count;
 

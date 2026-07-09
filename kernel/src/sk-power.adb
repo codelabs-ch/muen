@@ -18,6 +18,7 @@
 
 with SK.IO;
 with SK.CPU;
+with SK.Dump;
 
 with Skp.Hardware;
 
@@ -31,6 +32,8 @@ is
       --  Enable S5 soft-off (1 << 13).
       ACPI_PM1_CNT_SLP_EN : constant := 16#2000#;
    begin
+      pragma Debug (Dump.Print_Message (Msg => "System will shutdown"));
+
       IO.Outw (Port  => Skp.Hardware.System_Board_Poweroff_Port,
                Value => Skp.Hardware.System_Board_Pm1a_Cnt_Slp_Typ
                or ACPI_PM1_CNT_SLP_EN);
@@ -50,6 +53,8 @@ is
 
       Code : Byte := RST_CPU or SYS_RST;
    begin
+      pragma Debug (Dump.Print_Message (Msg => "System will reboot"));
+
       if Power_Cycle then
          Code := Code or FULL_RST;
       end if;

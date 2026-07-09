@@ -27,6 +27,12 @@ is
 
    use SK.Strings;
 
+   --  Print message for given IOMMU without acquiring the Debug Lock.
+   procedure Print_Message_No_Lock
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Message : String;
+      Newline : Boolean := True);
+
    -------------------------------------------------------------------------
 
    procedure Print_Global_Status
@@ -34,9 +40,9 @@ is
       Status : Skp.IOMMU.Reg_Global_Status_Type)
    is
    begin
-      KC.Put_Line
-        (Item => "IOMMU " & Img_Nobase (Byte (IOMMU))
-         & ": TES "   & Img_Nobase (Byte (Status.TES))
+      Print_Message
+        (IOMMU   => IOMMU,
+         Message => "TES "   & Img_Nobase (Byte (Status.TES))
          & ", RTPS "  & Img_Nobase (Byte (Status.RTPS))
          & ", FLS "   & Img_Nobase (Byte (Status.FLS))
          & ", AFLS "  & Img_Nobase (Byte (Status.AFLS))
@@ -55,12 +61,27 @@ is
       Newline : Boolean := True)
    is
    begin
+      Debug_Lock.Acquire;
+      Print_Message_No_Lock (IOMMU    => IOMMU,
+                             Message  => Message,
+                             Newline  => Newline);
+      Debug_Lock.Release;
+   end Print_Message;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Message_No_Lock
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Message : String;
+      Newline : Boolean := True)
+   is
+   begin
       KC.Put_String (Item => "IOMMU " & Img_Nobase (Byte (IOMMU)) & ": ");
       KC.Put_String (Item => Message);
       if Newline then
          KC.New_Line;
       end if;
-   end Print_Message;
+   end Print_Message_No_Lock;
 
    -------------------------------------------------------------------------
 
@@ -75,16 +96,17 @@ is
    begin
       Debug_Lock.Acquire;
       if Fault.F = 0 then
-         Print_Message
+         Print_Message_No_Lock
            (IOMMU   => IOMMU,
             Message => "Bogus VT-d fault with FRI " & Img (Byte (FRI)));
          Debug_Lock.Release;
          return;
       end if;
 
-      Print_Message (IOMMU   => IOMMU,
-                     Message => "VT-d fault with FRI " & Img (Byte (FRI)),
-                     Newline => False);
+      Print_Message_No_Lock
+        (IOMMU   => IOMMU,
+         Message => "VT-d fault with FRI " & Img (Byte (FRI)),
+         Newline => False);
       KC.Put_String (Item => " - Reason: " & Img (Fault.FR));
 
       if Fault.FR in IR_Fault_Range then

@@ -638,8 +638,9 @@ is
    --D @Section Id => impl_handle_timer_expiry, Label => Timer Expiry, Parent => impl_exit_handler, Priority => 40
    --D @Text Section => impl_handle_timer_expiry
    --D The VMX timer expiration designates the end of a minor frame. Handle the
-   --D timer expiry by updating the current scheduling information and checking
-   --D if a timed event has expired as well.
+   --D timer expiry by checking that the minor frame deadline has actually
+   --D passed, updating the current scheduling information and checking if a
+   --D timed event has expired as well.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
      with
        Global =>
@@ -651,8 +652,21 @@ is
                      Scheduling_Info.State, Subjects.State,
                      Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
-      Next_Subject_ID : Skp.Global_Subject_ID_Type;
+      Deadline_Reached : Boolean;
+      Next_Subject_ID  : Skp.Global_Subject_ID_Type;
    begin
+      --D @Text Section => impl_handle_timer_expiry, Priority => 5
+      --D \paragraph{}
+      --D The VMX-preemption timer may expire earlier than expected when
+      --D programmed with certain large values, see Intel erratum EMR158.
+      --D Double-check that the current minor frame has actually expired.
+      --D Return without updating the scheduling information if the deadline
+      --D has not yet passed.
+      Deadline_Reached := Scheduler.Minor_Frame_Deadline_Reached;
+      if not Deadline_Reached then
+         return;
+      end if;
+
       Scheduler.Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
 
       --  Check and possibly handle timed event of subject.

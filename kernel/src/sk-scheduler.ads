@@ -78,6 +78,14 @@ is
         (Input  => (State, CPU_Info.APIC_ID, CPU_Info.CPU_ID),
          In_Out => (Crash_Audit.State, X86_64.State));
 
+   --  Returns True if the deadline of the current minor frame has been
+   --  reached, i.e. the current CPU time  is equal to or greater than the
+   --  deadline timestamp.
+   function Minor_Frame_Deadline_Reached return Boolean
+   with
+      Global => (Input => (State, CPU_Info.CPU_ID, X86_64.State)),
+      Volatile_Function;
+
    --  Update scheduling information. If the end of the current major frame is
    --  reached the major frame start time is updated by adding the period of
    --  the just expired major frame to the current start value. Additionally,

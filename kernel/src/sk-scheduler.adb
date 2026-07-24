@@ -839,26 +839,48 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_VMX_Exit_Timer
+   --  Absolute deadline of the current minor frame is given by start of major
+   --  frame plus the number of CPU cycles until the end of the current minor
+   --  frame relative to major frame start.
+   function Current_Minor_Frame_Deadline return Word64
+   with
+      Global => (Input => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
+                           Global_Current_Major_Frame_ID,
+                           Global_Current_Major_Start_Cycles))
    is
-      Now      : constant Word64 := CPU.RDTSC;
-      Deadline : Word64;
-      Cycles   : Word64;
    begin
-
-      --  Absolute deadline is given by start of major frame plus the number of
-      --  CPU cycles until the end of the current minor frame relative to major
-      --  frame start.
-
       --D @Interface
       --D Calculate absolute deadline timestamp by using the current global
       --D major frame start timestamp and adding the current minor frame
       --D deadline, which is relative to major frame start.
-      Deadline := Global_Current_Major_Start_Cycles +
+      return Global_Current_Major_Start_Cycles +
         Policy.Scheduling_Plans (CPU_Info.CPU_ID)
         (Global_Current_Major_Frame_ID).Minor_Frames
         (Current_Minor_Frame_ID).Deadline;
+   end Current_Minor_Frame_Deadline;
 
+   -------------------------------------------------------------------------
+
+   function Minor_Frame_Deadline_Reached return Boolean
+   with
+      Refined_Global =>
+        (Input => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
+                   Global_Current_Major_Frame_ID,
+                   Global_Current_Major_Start_Cycles, X86_64.State))
+   is
+      Now : constant Word64 := CPU.RDTSC;
+   begin
+      return Current_Minor_Frame_Deadline <= Now;
+   end Minor_Frame_Deadline_Reached;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_VMX_Exit_Timer
+   is
+      Now      : constant Word64 := CPU.RDTSC;
+      Deadline : constant Word64 := Current_Minor_Frame_Deadline;
+      Cycles   : Word64;
+   begin
       if Deadline > Now then
          Cycles := Deadline - Now;
       else

@@ -24,7 +24,8 @@ with SK.VMX;
 package body SK.Scheduler
 with
    Refined_State =>
-     (State => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+     (State => (Current_Minor_Frame_Deadline, Current_Minor_Frame_ID,
+                Global_Current_Major_Frame_ID,
                 Global_Current_Major_Start_Cycles, Scheduling_Partitions,
                 Scheduling_Groups),
       Group_Activity_Indicator => Global_Group_Activity_Indicator)
@@ -703,7 +704,8 @@ is
         (Input  => (Apic.Is_BSP, CPU_Info.CPU_ID, Subjects_Events.State,
                     Subjects_Interrupts.State, Tau0_Interface.State,
                     Timed_Events.State, X86_64.State),
-         In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+         In_Out => (Current_Minor_Frame_Deadline, Current_Minor_Frame_ID,
+                    Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles,
                     Global_Group_Activity_Indicator, MP.Barrier,
                     Scheduling_Groups, Scheduling_Info.State,
@@ -724,9 +726,10 @@ is
         := Policy.Scheduling_Plans (CPU_Info.CPU_ID) (Current_Major_ID).Length;
 
       --D @Interface
-      --D Save current major frame CPU cycles for schedule info export.
-      Current_Major_Frame_Start : constant Word64
-        := Global_Current_Major_Start_Cycles;
+      --D Save current deadline for schedule info export. The deadline of the
+      --D previous frame is the start of the next.
+      Next_Schedule_Start : constant Word64
+        := Current_Minor_Frame_Deadline;
 
       Next_Minor_ID : Policy.Minor_Frame_Range;
    begin
@@ -810,6 +813,15 @@ is
 
       Current_Minor_Frame_ID := Next_Minor_ID;
 
+      --  Update current minor frame deadline. The absolute deadline value is
+      --  given by start of major frame plus the number of CPU cycles until the
+      --  end of the current minor frame relative to major frame start.
+
+      Current_Minor_Frame_Deadline := Global_Current_Major_Start_Cycles +
+        Policy.Scheduling_Plans (CPU_Info.CPU_ID)
+          (Global_Current_Major_Frame_ID).Minor_Frames
+          (Next_Minor_ID).Deadline;
+
       --D @Text Section => impl_handle_timer_expiry, Priority => 10
       --D After updating the major and minor frame information, which is the
       --D first level of the hierarchical scheduling algorithm, scheduling
@@ -828,39 +840,22 @@ is
       Scheduling_Info.Set_Scheduling_Info
         (ID                 => Policy.Get_Scheduling_Partition_ID
            (Subject_ID => Next_Subject),
-         TSC_Schedule_Start => Current_Major_Frame_Start +
-           Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-             (Current_Major_ID).Minor_Frames (Current_Minor_ID).Deadline,
-         TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
-           Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-             (Global_Current_Major_Frame_ID).Minor_Frames
-             (Next_Minor_ID).Deadline);
+         TSC_Schedule_Start => Next_Schedule_Start,
+         TSC_Schedule_End   => Current_Minor_Frame_Deadline);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
 
    procedure Set_VMX_Exit_Timer
    is
-      Now      : constant Word64 := CPU.RDTSC;
-      Deadline : Word64;
-      Cycles   : Word64;
+      Now    : constant Word64 := CPU.RDTSC;
+      Cycles : Word64;
    begin
-
-      --  Absolute deadline is given by start of major frame plus the number of
-      --  CPU cycles until the end of the current minor frame relative to major
-      --  frame start.
-
       --D @Interface
-      --D Calculate absolute deadline timestamp by using the current global
-      --D major frame start timestamp and adding the current minor frame
-      --D deadline, which is relative to major frame start.
-      Deadline := Global_Current_Major_Start_Cycles +
-        Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-        (Global_Current_Major_Frame_ID).Minor_Frames
-        (Current_Minor_Frame_ID).Deadline;
-
-      if Deadline > Now then
-         Cycles := Deadline - Now;
+      --D Calculate remaining cycles using the current minor frame deadline and
+      --D the current CPU cycles timestamp.
+      if Current_Minor_Frame_Deadline > Now then
+         Cycles := Current_Minor_Frame_Deadline - Now;
       else
          Cycles := 0;
       end if;
@@ -918,6 +913,13 @@ is
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
 
          --D @Item List => impl_kernel_init_sched_steps
+         --D Calculate the deadline of the initial minor frame.
+         Current_Minor_Frame_Deadline := Now + Policy.Scheduling_Plans
+           (CPU_Info.CPU_ID)
+             (Policy.Major_Frame_Range'First).Minor_Frames
+             (Policy.Minor_Frame_Range'First).Deadline;
+
+         --D @Item List => impl_kernel_init_sched_steps
          --D Set start and end timestamp of the initial minor frame for
          --D the scheduling partition of the first subject. The values are based
          --D on the current TSC and the deadline of the first minor frame.
@@ -925,10 +927,7 @@ is
            (ID                 => Policy.Get_Scheduling_Partition_ID
               (Subject_ID => Current_Subject),
             TSC_Schedule_Start => Now,
-            TSC_Schedule_End   => Now + Policy.Scheduling_Plans
-              (CPU_Info.CPU_ID)
-                (Policy.Major_Frame_Range'First).Minor_Frames
-                (Policy.Minor_Frame_Range'First).Deadline);
+            TSC_Schedule_End   => Current_Minor_Frame_Deadline);
 
          if Apic.Is_BSP then
 

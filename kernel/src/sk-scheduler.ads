@@ -75,7 +75,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (State, CPU_Info.APIC_ID, CPU_Info.CPU_ID),
+        (Input  => (State, CPU_Info.APIC_ID),
          In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Update scheduling information. If the end of the current major frame is
@@ -153,6 +153,13 @@ private
    --D ID of currently active minor frame.
    Current_Minor_Frame_ID : Policy.Minor_Frame_Range
      := Policy.Minor_Frame_Range'First
+   with
+      Part_Of => State;
+
+   --D @Text Section => SK.Scheduler.Current_Minor_Frame_Deadline
+   --D Timestamp of deadline of currently active minor frame. This variable
+   --D acts as a cache to avoid recomputation on every non-timer VM-exit.
+   Current_Minor_Frame_Deadline : Word64 := 0
    with
       Part_Of => State;
 

@@ -212,7 +212,7 @@ is
       Global => (Input  => Timed_Events.State,
                  In_Out => (Scheduling_Groups, Scheduling_Partitions,
                             Global_Group_Activity_Indicator)),
-      Annotate => (GNATprove, Terminating)
+      Always_Terminates
    is
       --  Insert group with given ID and deadline into timed event list between
       --  Prev and Next.
@@ -333,7 +333,7 @@ is
          (if Next_Group /= Policy.No_Group then
             Next_Group_Index <= Policy.Scheduling_Partition_Config
               (Partition_ID).Last_Group_Index),
-      Annotate => (GNATprove, Terminating)
+      Always_Terminates
    is
       Current_SG_Index : constant Policy.Scheduling_Group_Index_Range
         := Scheduling_Partitions (Partition_ID).Active_Group_Index;

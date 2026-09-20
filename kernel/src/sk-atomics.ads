@@ -37,14 +37,14 @@ is
      (Atomic : in out Atomic64_Type;
       Bit    :        Bit_Pos)
    with
-      Annotate => (GNATprove, Terminating);
+      Always_Terminates;
 
    --  Set bit at specified position of given atomic bitmap.
    procedure Set
      (Atomic : in out Atomic64_Type;
       Bit    :        Bit_Pos)
    with
-      Annotate => (GNATprove, Terminating);
+      Always_Terminates;
 
    --  Find highest bit set in given atomic bitmap. Found is set to False, if
    --  no bit is set.

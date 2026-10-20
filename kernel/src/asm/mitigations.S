@@ -16,7 +16,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "sk-mitigations.h"
+
 #define RSB_ENTRIES	32
+
+/*
+ * Selection validation: fail the build when a mitigation selected by the
+ * mugenspec-generated sk-mitigations.h is not implemented below. Drop the
+ * #error of a mitigation when its primitive is implemented.
+ */
+#if defined (SK_MIT_EIBRS)
+#error "eibrs selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_BHI_DIS_S)
+#error "bhiDisS selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_IBPB)
+#error "ibpb selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_VERW)
+#error "verw selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_IBRS_LEGACY)
+#error "ibrsLegacy selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_RSB_STUFFING_SINGLECALL)
+#error "rsbStuffing singleCall selected but not implemented in the kernel"
+#endif
+#if defined (SK_MIT_BHB_LOOP)
+#error "bhbLoop selected but not implemented in the kernel"
+#endif
 
 /*
  * Full 32-entry RSB fill using r15 as the loop counter. Mirrors the Linux
@@ -43,8 +72,11 @@
 
 /*
  * Mitigation preamble of the VM-exit path, invoked once at the top of
- * vmx_exit_handler before any RET of the exit path.
+ * vmx_exit_handler before any RET of the exit path. A primitive is compiled
+ * in iff its selection define is present.
  */
 .macro vmx_exit_mitigations_preamble
+#if defined (SK_MIT_RSB_STUFFING_FULLFILL32)
 	fill_return_buffer
+#endif
 .endm

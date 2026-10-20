@@ -32,28 +32,25 @@ vmx_exit_handler:
 	xor  %r15, %r15
 
 	/*
-	 * SpectreRSB mitigation: full 32-entry RSB fill (Linux
-	 * __FILL_RETURN_BUFFER, RSB_CLEAR_LOOPS = 32) with the trailing
-	 * lfence as jnz-misprediction barrier.
+	 * SpectreRSB mitigation, fullFill32: full 32-entry RSB fill.
+	 * Mirrors the Linux __FILL_RETURN_BUFFER (RSB_CLEAR_LOOPS = 32) with
+	 * its int3 slot trap - arch/x86/include/asm/nospec-branch.h in linux
+	 * master (v7.4-rc1). Each iteration stuffs two slots whose return
+	 * addresses point at an int3 (the speculation trap) and pops them;
+	 * the trailing lfence is the jnz-misprediction barrier.
 	 */
 	mov $(RSB_ENTRIES/2), %r15
 1:
 	call 3f
-2:	/* speculation trap */
-	pause
-	lfence
-	jmp 2b
+	int3
 3:
 	call 5f
-4:	/* speculation trap */
-	pause
-	lfence
-	jmp 4b
+	int3
 5:
+	add $16, %rsp
 	dec %r15
 	jnz 1b
 	lfence
-	add $(RSB_ENTRIES*8), %rsp
 
 	push %r14
 	xor  %r14, %r14

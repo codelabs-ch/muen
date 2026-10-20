@@ -43,9 +43,6 @@
 #if defined (SK_MIT_RSB_STUFFING_SINGLECALL)
 #error "rsbStuffing singleCall selected but not implemented in the kernel"
 #endif
-#if defined (SK_MIT_BHB_LOOP)
-#error "bhbLoop selected but not implemented in the kernel"
-#endif
 
 /*
  * Full 32-entry RSB fill using r15 as the loop counter. Mirrors the Linux
@@ -71,6 +68,37 @@
 .endm
 
 /*
+ * BHB clearing loop. Mirrors the Linux clear_bhb_loop
+ * (arch/x86/entry/entry_64.S, Linux master f47d223627f8, 2026-10-19):
+ * 5 x 5 rounds of nested call/return that repopulate the branch history
+ * buffer with a trusted pattern before the SK's first indirect branch of
+ * the exit path, plus a trailing lfence. Adapted to the preamble register
+ * contract: only r15 (outer counter, saved across the inner rounds on the
+ * stack) is used. The Linux cacheline alignment (RET in the upper half of a
+ * cacheline) is an ITS mitigation; Muen omits it because ITS does not cross
+ * the VMX boundary on the supported platform and subject-side aligned
+ * thunks handle intra-mode ITS.
+ */
+.macro clear_branch_history
+	mov  $5, %r15
+	call 11f
+	jmp  15f
+11:	call 12f
+	RET
+12:	push %r15
+	mov  $5, %r15
+13:	jmp  14f
+	nop
+14:	sub  $1, %r15
+	jnz  13b
+	pop  %r15
+	sub  $1, %r15
+	jnz  11b
+	RET
+15:	lfence
+.endm
+
+/*
  * Mitigation preamble of the VM-exit path, invoked once at the top of
  * vmx_exit_handler before any RET of the exit path. A primitive is compiled
  * in iff its selection define is present.
@@ -78,5 +106,8 @@
 .macro vmx_exit_mitigations_preamble
 #if defined (SK_MIT_RSB_STUFFING_FULLFILL32)
 	fill_return_buffer
+#endif
+#if defined (SK_MIT_BHB_LOOP)
+	clear_branch_history
 #endif
 .endm

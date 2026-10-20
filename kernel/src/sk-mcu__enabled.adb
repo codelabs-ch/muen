@@ -28,6 +28,7 @@ with SK.CPU_Info;
 with SK.Strings;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
+with SK.Mitigations;
 with Skp.MCU;
 
 package body SK.MCU
@@ -104,7 +105,7 @@ is
    procedure Process
    is
       My_Sig : Word32 := 1;
-      Unused_Rev, Unused_EBX, Unused_ECX, Unused_EDX : Word32;
+      Rev, Unused_EBX, Unused_ECX, Unused_EDX : Word32;
    begin
       Unused_ECX := 0;
       CPU.CPUID
@@ -112,7 +113,7 @@ is
          EBX => Unused_EBX,
          ECX => Unused_ECX,
          EDX => Unused_EDX);
-      Get_Update_ID (Value => Unused_Rev);
+      Get_Update_ID (Value => Rev);
 
       --  Common info is only logged on BSP.
 
@@ -121,7 +122,7 @@ is
          Dump.Print_Message
            (Msg    => "MCU: Updating CPU with signature "
             & Strings.Img (My_Sig) & " and revision "
-            & Strings.Img (Unused_Rev)));
+            & Strings.Img (Rev)));
 
       if UCH.Header_Version /= 1 then
          pragma Debug
@@ -130,49 +131,47 @@ is
               (Msg    =>
                  "MCU: ERROR - Unknown header version " &
                  Strings.Img (UCH.Header_Version)));
-         return;
-      end if;
-
-      pragma Debug
-        (Apic.Is_BSP,
-         Dump.Print_Message (Msg => "MCU: Ucode update @ "
-         & Strings.Img (Word64'(Skp.MCU.Ucode_Address))));
-      pragma Debug
-        (Apic.Is_BSP,
-         Dump.Print_MCU_Header (Hdr => UCH));
-
-      if My_Sig /= UCH.Processor_Signature then
+      elsif My_Sig /= UCH.Processor_Signature then
          pragma Debug
            (Dump.Print_Message
               (Msg =>
                  "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
                  & ": ERROR - Processor signature mismatch"));
-         return;
-      end if;
-      if Unused_Rev >= UCH.Update_Revision then
+      elsif Rev >= UCH.Update_Revision then
          pragma Debug
            (Dump.Print_Message
               (Msg =>
                  "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
                  & ": Skipping update, ucode not newer than"
                  & " active revision"));
-         return;
+      else
+         pragma Debug
+           (Apic.Is_BSP,
+            Dump.Print_Message (Msg => "MCU: Ucode update @ "
+             & Strings.Img (Word64'(Skp.MCU.Ucode_Address))));
+         pragma Debug
+           (Apic.Is_BSP,
+            Dump.Print_MCU_Header (Hdr => UCH));
+
+         Perform_Update;
+         Get_Update_ID (Value => Rev);
+         pragma Debug
+           (Rev = UCH.Update_Revision,
+            Dump.Print_Message
+              (Msg => "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
+               & ": Update to revision " & Strings.Img (Rev)
+               & " successful"));
+         pragma Debug
+           (Rev /= UCH.Update_Revision,
+            Dump.Print_Message
+              (Msg => "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
+               & ": ERROR - Update failed, revision still "
+               & Strings.Img (Rev)));
       end if;
 
-      Perform_Update;
-      Get_Update_ID (Value => Unused_Rev);
-      pragma Debug
-        (Unused_Rev = UCH.Update_Revision,
-         Dump.Print_Message
-           (Msg => "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
-            & ": Update to revision " & Strings.Img (Unused_Rev)
-            & " successful"));
-      pragma Debug
-        (Unused_Rev /= UCH.Update_Revision,
-         Dump.Print_Message
-           (Msg => "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
-            & ": ERROR - Update failed, revision still "
-            & Strings.Img (Unused_Rev)));
+      --  Fail closed if the loaded revision is below the floor required by
+      --  the mitigation policy.
+      Mitigations.Check_MCU_Revision (Revision => Rev);
    end Process;
 
 end SK.MCU;

@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "mitigations.S"
+
 .global vmx_exit_handler_ptr
 .global kernel_init
 
@@ -24,34 +26,15 @@ vmx_exit_handler_ptr:
 	.quad vmx_exit_handler
 
 #define CPU_REGS_SIZE	8 * 16
-#define RSB_ENTRIES		32
 
 .text
 vmx_exit_handler:
 	push %r15
 	xor  %r15, %r15
-
-	/*
-	 * SpectreRSB mitigation, fullFill32: full 32-entry RSB fill.
-	 * Mirrors the Linux __FILL_RETURN_BUFFER (RSB_CLEAR_LOOPS = 32) with
-	 * its int3 slot trap - arch/x86/include/asm/nospec-branch.h in linux
-	 * master (v7.4-rc1). Each iteration stuffs two slots whose return
-	 * addresses point at an int3 (the speculation trap) and pops them;
-	 * the trailing lfence is the jnz-misprediction barrier.
-	 */
-	mov $(RSB_ENTRIES/2), %r15
-1:
-	call 3f
-	int3
-3:
-	call 5f
-	int3
-5:
-	add $16, %rsp
-	dec %r15
-	jnz 1b
-	lfence
-
+	/* Mitigations preamble: may use only r15 (saved above) and rsp,
+	 * which it must restore; the other GPRs still hold guest state
+	 * until saved below. */
+	vmx_exit_mitigations_preamble
 	push %r14
 	xor  %r14, %r14
 	push %r13

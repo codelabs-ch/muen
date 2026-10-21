@@ -102,6 +102,15 @@ is
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
 
+   --  Set transient-execution mitigation context information for given entry
+   --  and mark it as valid.
+   procedure Set_Mitigations_Context
+     (Audit   : Entry_Type;
+      Context : Mitigations_Context_Type)
+   with
+      Global => (In_Out => State),
+      Pre    => Is_Allocated (Audit);
+
    --  Set VT-x context information for given entry and mark it as valid.
    procedure Set_VTx_Context
      (Audit   : Entry_Type;

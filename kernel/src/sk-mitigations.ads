@@ -20,6 +20,9 @@ with Interfaces;
 
 with X86_64;
 
+with SK.CPU_Info;
+with SK.Crash_Audit;
+
 --D @Interface
 --D This package implements the transient-execution mitigation policy checks
 --D of the kernel at boot (the MCU revision floor, and later the ARCH_CAP
@@ -30,12 +33,15 @@ package SK.Mitigations
 is
 
    --  Verify the microcode revision floor required by the mitigation policy
-   --  (<mcu minRevision>). Halts if the given loaded revision is below the
-   --  floor; this check runs on every core after the MCU load.
+   --  (<mcu minRevision>). This check runs on every core after the MCU
+   --  load; on failure a crash audit entry is recorded and the system is
+   --  restarted.
    procedure Check_MCU_Revision (Revision : Interfaces.Unsigned_32)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State => X86_64.State,
-                  null         => Revision);
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => (Crash_Audit.State => Crash_Audit.State,
+                  X86_64.State      => X86_64.State,
+                  null              => (CPU_Info.APIC_ID, Revision));
 
 end SK.Mitigations;

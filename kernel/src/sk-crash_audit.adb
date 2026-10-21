@@ -18,8 +18,6 @@
 
 with System.Machine_Code;
 
-with Interfaces;
-
 with Skp.Kernel;
 
 with SK.Dump;
@@ -298,6 +296,18 @@ is
       Instance.Crash_Info.Data (Audit.Slot).Field_Validity.Init_Context
         := True;
    end Set_Init_Context;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Mitigations_Context
+     (Audit   : Entry_Type;
+      Context : Mitigations_Context_Type)
+   is
+   begin
+      Instance.Crash_Info.Data (Audit.Slot).Mitigations_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity
+        .Mitigations_Context := True;
+   end Set_Mitigations_Context;
 
    -------------------------------------------------------------------------
 

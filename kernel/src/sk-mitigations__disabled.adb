@@ -22,11 +22,6 @@ with
 is
 
    procedure Check_MCU_Revision
-     (Revision : Interfaces.Unsigned_32)
-   is
-      pragma Unreferenced (Revision);
-   begin
-      null;
-   end Check_MCU_Revision;
+     (Revision : Interfaces.Unsigned_32) is null;
 
 end SK.Mitigations;

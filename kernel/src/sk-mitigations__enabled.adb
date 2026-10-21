@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
+with SK.Crash_Audit_Types;
 with SK.Dump;
 with SK.Strings;
 
@@ -29,6 +29,9 @@ is
 
    procedure Check_MCU_Revision (Revision : Interfaces.Unsigned_32)
    is
+      Audit    : SK.Crash_Audit.Entry_Type;
+      Mit_Ctx  : SK.Crash_Audit_Types.Mitigations_Context_Type
+        := SK.Crash_Audit_Types.Null_Mitigations_Context;
    begin
       if Revision < Skp.Mitigations.Min_MCU_Revision then
          Dump.Print_Message
@@ -37,8 +40,19 @@ is
             & " below required minimum "
             & SK.Strings.Img
               (Item => Interfaces.Unsigned_64 (Skp.Mitigations.Min_MCU_Revision))
-            & ", halting");
-         CPU.Stop;
+            & ", system init failure");
+         Mit_Ctx :=
+           (MCU_Revision     => Revision,
+            Min_MCU_Revision => Interfaces.Unsigned_32
+              (Skp.Mitigations.Min_MCU_Revision));
+         SK.Crash_Audit.Allocate (Audit => Audit);
+         SK.Crash_Audit.Set_Reason
+           (Audit  => Audit,
+            Reason => SK.Crash_Audit_Types.Mitigations_MCU_Floor);
+         SK.Crash_Audit.Set_Mitigations_Context
+           (Audit   => Audit,
+            Context => Mit_Ctx);
+         SK.Crash_Audit.Finalize (Audit => Audit);
       end if;
    end Check_MCU_Revision;
 

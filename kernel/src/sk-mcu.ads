@@ -18,6 +18,9 @@
 
 with X86_64;
 
+with SK.CPU_Info;
+with SK.Crash_Audit;
+
 --D @Interface
 --D This package provides Intel microcode update (MCU) facilities.
 --D This package does nothing if the policy does not specify an Intel microcode
@@ -31,8 +34,8 @@ is
    --  Perform MCU.
    procedure Process
    with
-      Global => (Input  => State,
-                 In_Out => X86_64.State);
+      Global => (Input  => (State, CPU_Info.APIC_ID),
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    Header_Size : constant := 48;
 

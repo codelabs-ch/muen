@@ -24,11 +24,11 @@ with SK.Dump;
 pragma $Release_Warnings
   (Off, "unit * is not referenced", Reason => "Only used for debug output");
 with SK.Apic;
-with SK.CPU_Info;
 with SK.Strings;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
 with SK.Mitigations;
+with SK.Mitigations.MCU;
 with Skp.MCU;
 
 package body SK.MCU
@@ -171,7 +171,11 @@ is
 
       --  Fail closed if the loaded revision is below the floor required by
       --  the mitigation policy.
-      Mitigations.Check_MCU_Revision (Revision => Rev);
+      Mitigations.MCU.Check_MCU_Revision (Revision => Rev);
+
+      --  Fail closed if the IA32_ARCH_CAPABILITIES value does not meet the
+      --  expectations of the mitigation policy.
+      Mitigations.Check_Arch_Cap;
    end Process;
 
 end SK.MCU;

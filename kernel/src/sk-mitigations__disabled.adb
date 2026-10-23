@@ -21,7 +21,6 @@ with
    SPARK_Mode => Off
 is
 
-   procedure Check_MCU_Revision
-     (Revision : Interfaces.Unsigned_32) is null;
+   procedure Check_Arch_Cap is null;
 
 end SK.Mitigations;

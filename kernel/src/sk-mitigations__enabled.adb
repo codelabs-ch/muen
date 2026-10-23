@@ -16,9 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
 with SK.Crash_Audit_Types;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Apic;
 with SK.Dump;
 with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 with Skp.Mitigations;
 
@@ -27,33 +33,58 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_MCU_Revision (Revision : Interfaces.Unsigned_32)
+   procedure Check_Arch_Cap
    is
-      Audit    : SK.Crash_Audit.Entry_Type;
-      Mit_Ctx  : SK.Crash_Audit_Types.Mitigations_Context_Type
+      IA32_ARCH_CAPABILITIES : constant := 16#10a#;
+
+      Audit   : SK.Crash_Audit.Entry_Type;
+      High    : Interfaces.Unsigned_32;
+      Low     : Interfaces.Unsigned_32;
+      Value   : Interfaces.Unsigned_64;
+      Mask    : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64 (Skp.Mitigations.Arch_Cap_Mask);
+      Mit_Ctx : SK.Crash_Audit_Types.Mitigations_Context_Type
         := SK.Crash_Audit_Types.Null_Mitigations_Context;
    begin
-      if Revision < Skp.Mitigations.Min_MCU_Revision then
-         Dump.Print_Message
-           (Msg => "MCU: Microcode revision "
-            & SK.Strings.Img (Item => Revision)
-            & " below required minimum "
-            & SK.Strings.Img
-              (Item => Interfaces.Unsigned_64 (Skp.Mitigations.Min_MCU_Revision))
-            & ", system init failure");
-         Mit_Ctx :=
-           (MCU_Revision     => Revision,
-            Min_MCU_Revision => Interfaces.Unsigned_32
-              (Skp.Mitigations.Min_MCU_Revision));
+      CPU.Get_MSR
+        (Register => IA32_ARCH_CAPABILITIES,
+         Low      => Low,
+         High     => High);
+      Value := Interfaces.Shift_Left
+        (Value  => Interfaces.Unsigned_64 (High),
+         Amount => 32)
+        or Interfaces.Unsigned_64 (Low);
+      if (Value and Mask)
+        /= Interfaces.Unsigned_64 (Skp.Mitigations.Arch_Cap_Expected)
+      then
+
+         --  Common info is only logged on BSP (see SK.MCU).
+
+         pragma Debug
+           (Apic.Is_BSP,
+            Dump.Print_Message
+              (Msg => "ARCH_CAP: Value "
+               & SK.Strings.Img (Item => Value)
+               & " does not match expected "
+               & SK.Strings.Img
+                 (Item => Interfaces.Unsigned_64
+                    (Skp.Mitigations.Arch_Cap_Expected))
+               & " under mask "
+               & SK.Strings.Img (Item => Mask)
+               & ", system init failure"));
+         Mit_Ctx.Arch_Cap_Value := Value;
+         Mit_Ctx.Arch_Cap_Mask  := Mask;
+         Mit_Ctx.Arch_Cap_Expected
+           := Interfaces.Unsigned_64 (Skp.Mitigations.Arch_Cap_Expected);
          SK.Crash_Audit.Allocate (Audit => Audit);
          SK.Crash_Audit.Set_Reason
            (Audit  => Audit,
-            Reason => SK.Crash_Audit_Types.Mitigations_MCU_Floor);
+            Reason => SK.Crash_Audit_Types.Mitigations_Arch_Cap);
          SK.Crash_Audit.Set_Mitigations_Context
            (Audit   => Audit,
             Context => Mit_Ctx);
          SK.Crash_Audit.Finalize (Audit => Audit);
       end if;
-   end Check_MCU_Revision;
+   end Check_Arch_Cap;
 
 end SK.Mitigations;

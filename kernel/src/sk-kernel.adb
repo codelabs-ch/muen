@@ -19,6 +19,7 @@
 with Skp.Events;
 with Skp.Interrupts;
 with Skp.Kernel;
+with Skp.Scheduling;
 with Skp.Subjects;
 
 with SK.Bitops;
@@ -26,6 +27,8 @@ with SK.CPU;
 with SK.Constants;
 with SK.Dump;
 with SK.KC;
+with SK.Mitigations;
+with SK.Mitigations.VM_Entry;
 with SK.Version;
 with SK.Power;
 with SK.Subjects.Debug;
@@ -797,8 +800,17 @@ is
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
       Current_Subject        : Skp.Global_Subject_ID_Type;
+
+      use type Skp.Scheduling.Scheduling_Partition_Range;
+
+      --  Scheduling partition of the subject that caused the exit, used to
+      --  detect a partition change before the next entry.
+      Previous_Partition : Skp.Scheduling.Scheduling_Partition_Range;
+      Next_Partition     : Skp.Scheduling.Scheduling_Partition_Range;
    begin
-      Current_Subject := Scheduler.Get_Current_Subject_ID;
+      Current_Subject    := Scheduler.Get_Current_Subject_ID;
+      Previous_Partition := Skp.Scheduling.Get_Scheduling_Partition_ID
+        (Subject_ID => Current_Subject);
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Reason);
@@ -897,6 +909,16 @@ is
       --D Then, a pending interrupt, if present, is prepared for injection, see
       --D \ref{impl_inject_interrupt}.
       Inject_Interrupt (Subject_ID => Current_Subject);
+
+      --D @Text Section => impl_exit_handler
+      --D If the next subject is in a different scheduling partition, the
+      --D VM-entry mitigation primitives (currently IBPB) are executed to
+      --D flush the branch predictor state of the previous subject.
+      Next_Partition := Skp.Scheduling.Get_Scheduling_Partition_ID
+        (Subject_ID => Current_Subject);
+      if Previous_Partition /= Next_Partition then
+         Mitigations.VM_Entry.Run;
+      end if;
 
       --D @Text Section => impl_exit_handler
       --D \paragraph{}
@@ -1170,6 +1192,10 @@ is
               (ID   => Current_Subject,
                Regs => Subject_Registers);
             FPU.Restore_State (ID => Current_Subject);
+
+            --  Flush the BTB before the first subject entry (the kernel boot
+            --  code populated the branch predictor state).
+            Mitigations.VM_Entry.Run;
          end;
       end;
 

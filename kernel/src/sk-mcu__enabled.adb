@@ -29,6 +29,7 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 with SK.Mitigations;
 with SK.Mitigations.MCU;
+with SK.Mitigations.VM_Entry;
 with Skp.MCU;
 
 package body SK.MCU
@@ -176,6 +177,9 @@ is
       --  Fail closed if the IA32_ARCH_CAPABILITIES value does not meet the
       --  expectations of the mitigation policy.
       Mitigations.Check_Arch_Cap;
+
+      --  Fail closed if the CPU does not support IA32_PRED_CMD.IBPB.
+      Mitigations.VM_Entry.Check_Ibpb;
    end Process;
 
 end SK.MCU;

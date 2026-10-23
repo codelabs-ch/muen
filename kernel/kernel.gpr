@@ -39,6 +39,7 @@ project Kernel is
    MCU_Pkg := "";
    Mitigations_Pkg := "";
    MCU_Mitigations_Pkg := "";
+   VM_Entry_Pkg := "";
 
    case Build_Mode is
       when "debug" =>
@@ -100,7 +101,9 @@ project Kernel is
    --  always checked, while the ARCH_CAP check (SK.Mitigations) is "enabled"
    --  only when the policy requires IA32_ARCH_CAPABILITIES bits - otherwise
    --  it is compiled out entirely, as the MSR may not be readable on such a
-   --  target (empty <archCapabilities/> at collection time).
+   --  target (empty <archCapabilities/> at collection time). The VM-entry
+   --  mitigations (SK.Mitigations.VM_Entry) follow the same pattern: their
+   --  body is "enabled" only when a vmEntry mitigation leaf is enabled.
    case Policy.Mitigations_Enabled is
       when "True" =>
          MCU_Mitigations_Pkg := "enabled";
@@ -108,9 +111,14 @@ project Kernel is
             when "True"  => Mitigations_Pkg := "enabled";
             when "False" => Mitigations_Pkg := "disabled";
          end case;
+         case Policy.VM_Entry_Enabled is
+            when "True"  => VM_Entry_Pkg := "enabled";
+            when "False" => VM_Entry_Pkg := "disabled";
+         end case;
       when "False" =>
          MCU_Mitigations_Pkg := "disabled";
          Mitigations_Pkg     := "disabled";
+         VM_Entry_Pkg        := "disabled";
    end case;
 
    for Languages use ("Ada") & Extra_Languages;
@@ -147,6 +155,7 @@ project Kernel is
       for Body ("SK.MCU") use "sk-mcu__" & MCU_Pkg & ".adb";
       for Body ("SK.Mitigations") use "sk-mitigations__" & Mitigations_Pkg & ".adb";
       for Body ("SK.Mitigations.MCU") use "sk-mitigations-mcu__" & MCU_Mitigations_Pkg & ".adb";
+      for Body ("SK.Mitigations.VM_Entry") use "sk-mitigations-vm_entry__" & VM_Entry_Pkg & ".adb";
    end Naming;
 
 end Kernel;

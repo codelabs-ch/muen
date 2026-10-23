@@ -16,32 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with X86_64;
 
 with SK.CPU_Info;
 with SK.Crash_Audit;
 
 --D @Interface
---D This package implements the transient-execution mitigation policy checks
---D of the kernel at boot (the MCU revision floor, and later the ARCH_CAP
---D check and the Ada/SPARK mitigation primitives). It is compiled in only
---D when the mitigation policy is enabled (<mitigations enable="...">); the
---D disabled variant is a null body.
+--D This package implements the IA32_ARCH_CAPABILITIES boot check; the MCU
+--D revision floor lives in the SK.Mitigations.MCU child.
 package SK.Mitigations
 is
 
-   --  Verify the microcode revision floor required by the mitigation policy
-   --  (<mcu minRevision>). This check runs on every core after the MCU
-   --  load; on failure a crash audit entry is recorded and the system is
-   --  restarted.
-   procedure Check_MCU_Revision (Revision : Interfaces.Unsigned_32)
+   --  Verify (IA32_ARCH_CAPABILITIES and Mask) = Expected; on failure record
+   --  a crash audit entry and restart. Skipped (no MSR read) on targets
+   --  without ARCH_CAP requires.
+   procedure Check_Arch_Cap
    with
       Global  => (Input  => CPU_Info.APIC_ID,
                   In_Out => (Crash_Audit.State, X86_64.State)),
-      Depends => (Crash_Audit.State => Crash_Audit.State,
-                  X86_64.State      => X86_64.State,
-                  null              => (CPU_Info.APIC_ID, Revision));
+      Depends => (Crash_Audit.State => (Crash_Audit.State,
+                                        CPU_Info.APIC_ID,
+                                        X86_64.State),
+                  X86_64.State      => (Crash_Audit.State,
+                                        CPU_Info.APIC_ID,
+                                        X86_64.State));
 
 end SK.Mitigations;

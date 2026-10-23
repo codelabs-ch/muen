@@ -38,6 +38,7 @@ project Kernel is
    Preprocessor_Switches := ();
    MCU_Pkg := "";
    Mitigations_Pkg := "";
+   MCU_Mitigations_Pkg := "";
 
    case Build_Mode is
       when "debug" =>
@@ -93,9 +94,23 @@ project Kernel is
       when "False" => MCU_Pkg := "disabled";
    end case;
 
+   --  Select the SK.Mitigations and SK.Mitigations.MCU package bodies:
+   --  without the mitigation policy both are "disabled" (null checks). With
+   --  the policy enabled, the MCU revision floor (SK.Mitigations.MCU) is
+   --  always checked, while the ARCH_CAP check (SK.Mitigations) is "enabled"
+   --  only when the policy requires IA32_ARCH_CAPABILITIES bits - otherwise
+   --  it is compiled out entirely, as the MSR may not be readable on such a
+   --  target (empty <archCapabilities/> at collection time).
    case Policy.Mitigations_Enabled is
-      when "True"  => Mitigations_Pkg := "enabled";
-      when "False" => Mitigations_Pkg := "disabled";
+      when "True" =>
+         MCU_Mitigations_Pkg := "enabled";
+         case Policy.Arch_Cap_Check_Enabled is
+            when "True"  => Mitigations_Pkg := "enabled";
+            when "False" => Mitigations_Pkg := "disabled";
+         end case;
+      when "False" =>
+         MCU_Mitigations_Pkg := "disabled";
+         Mitigations_Pkg     := "disabled";
    end case;
 
    for Languages use ("Ada") & Extra_Languages;
@@ -131,6 +146,7 @@ project Kernel is
       for Body_Suffix ("Asm_Cpp") use ".S";
       for Body ("SK.MCU") use "sk-mcu__" & MCU_Pkg & ".adb";
       for Body ("SK.Mitigations") use "sk-mitigations__" & Mitigations_Pkg & ".adb";
+      for Body ("SK.Mitigations.MCU") use "sk-mitigations-mcu__" & MCU_Mitigations_Pkg & ".adb";
    end Naming;
 
 end Kernel;

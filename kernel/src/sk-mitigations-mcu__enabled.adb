@@ -52,10 +52,13 @@ is
                     (Skp.Mitigations.Min_MCU_Revision))
                & ", system init failure"));
          Mit_Ctx :=
-           (MCU_Revision     => Revision,
-            Min_MCU_Revision => Interfaces.Unsigned_32
+           (MCU_Revision      => Revision,
+            Min_MCU_Revision  => Interfaces.Unsigned_32
               (Skp.Mitigations.Min_MCU_Revision),
-            others           => 0);
+            Arch_Cap_Value    => 0,
+            Arch_Cap_Mask     => 0,
+            Arch_Cap_Expected => 0,
+            Cpuid_Value       => 0);
          SK.Crash_Audit.Allocate (Audit => Audit);
          SK.Crash_Audit.Set_Reason
            (Audit  => Audit,

@@ -54,6 +54,8 @@ is
       Unused_EBX    : Interfaces.Unsigned_32;
       Unused_ECX    : Interfaces.Unsigned_32;
       EDX           : Interfaces.Unsigned_32;
+      Ctx           : SK.Crash_Audit_Types.Mitigations_Context_Type
+        := SK.Crash_Audit_Types.Null_Mitigations_Context;
 
       --  CPUID.07H.00H:EDX[26] = IBPB support, see SDM Vol. 2 CPUID leaf 7.
       IBPB_Support_Bit : constant := 26;
@@ -71,10 +73,14 @@ is
             Dump.Print_Message
               (Msg => "IBPB: CPUID.07H.00H:EDX[26] unset, IA32_PRED_CMD "
                & "IBPB unsupported, system init failure"));
+         Ctx.Cpuid_Value := EDX;
          SK.Crash_Audit.Allocate (Audit => Audit);
          SK.Crash_Audit.Set_Reason
            (Audit  => Audit,
-            Reason => SK.Crash_Audit_Types.Mitigations_Cpuid_Pre);
+            Reason => SK.Crash_Audit_Types.Mitigations_Cpuid_Ibpb);
+         SK.Crash_Audit.Set_Mitigations_Context
+           (Audit   => Audit,
+            Context => Ctx);
          SK.Crash_Audit.Finalize (Audit => Audit);
       end if;
    end Check_Ibpb;

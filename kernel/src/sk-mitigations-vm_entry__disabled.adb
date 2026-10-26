@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Crash_Audit_Types;
+
 package body SK.Mitigations.VM_Entry
 with
    SPARK_Mode => Off
@@ -23,6 +25,10 @@ is
 
    procedure Run is null;
 
-   procedure Check_Ibpb is null;
+   procedure Check_Cpuid_Feature
+     (Subleaf : Interfaces.Unsigned_32;
+      Bit     : Natural;
+      Reason  : SK.Crash_Audit_Types.Reason_Type)
+   is null;
 
 end SK.Mitigations.VM_Entry;

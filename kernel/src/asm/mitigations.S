@@ -31,9 +31,6 @@
 #if defined (SK_MIT_BHI_DIS_S)
 #error "bhiDisS selected but not implemented in the kernel"
 #endif
-#if defined (SK_MIT_VERW)
-#error "verw selected but not implemented in the kernel"
-#endif
 #if defined (SK_MIT_IBRS_LEGACY)
 #error "ibrsLegacy selected but not implemented in the kernel"
 #endif

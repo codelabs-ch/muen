@@ -30,6 +30,8 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 with SK.Mitigations;
 with SK.Mitigations.MCU;
 with SK.Mitigations.VM_Entry;
+with SK.Mitigations.VM_Entry.IBPB;
+with SK.Mitigations.VM_Entry.Verw;
 with Skp.MCU;
 
 package body SK.MCU
@@ -179,7 +181,11 @@ is
       Mitigations.Check_Arch_Cap;
 
       --  Fail closed if the CPU does not support IA32_PRED_CMD.IBPB.
-      Mitigations.VM_Entry.Check_Ibpb;
+      Mitigations.VM_Entry.IBPB.Check;
+
+      --  Fail closed if the CPU does not support the VERW buffer clear
+      --  (MD_CLEAR).
+      Mitigations.VM_Entry.Verw.Check;
    end Process;
 
 end SK.MCU;

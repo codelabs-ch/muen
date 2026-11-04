@@ -54,9 +54,7 @@ is
         (Value  => Interfaces.Unsigned_64 (High),
          Amount => 32)
         or Interfaces.Unsigned_64 (Low);
-      if (Value and Mask)
-        /= Interfaces.Unsigned_64 (Skp.Mitigations.Arch_Cap_Expected)
-      then
+      if (Value and Mask) /= Mask then
 
          --  Common info is only logged on BSP (see SK.MCU).
 
@@ -65,17 +63,11 @@ is
             Dump.Print_Message
               (Msg => "ARCH_CAP: Value "
                & SK.Strings.Img (Item => Value)
-               & " does not match expected "
-               & SK.Strings.Img
-                 (Item => Interfaces.Unsigned_64
-                    (Skp.Mitigations.Arch_Cap_Expected))
-               & " under mask "
+               & " does not satisfy required mask "
                & SK.Strings.Img (Item => Mask)
                & ", system init failure"));
          Mit_Ctx.Arch_Cap_Value := Value;
          Mit_Ctx.Arch_Cap_Mask  := Mask;
-         Mit_Ctx.Arch_Cap_Expected
-           := Interfaces.Unsigned_64 (Skp.Mitigations.Arch_Cap_Expected);
          SK.Crash_Audit.Allocate (Audit => Audit);
          SK.Crash_Audit.Set_Reason
            (Audit  => Audit,

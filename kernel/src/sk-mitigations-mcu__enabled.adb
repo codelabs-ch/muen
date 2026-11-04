@@ -57,7 +57,6 @@ is
               (Skp.Mitigations.Min_MCU_Revision),
             Arch_Cap_Value    => 0,
             Arch_Cap_Mask     => 0,
-            Arch_Cap_Expected => 0,
             Cpuid_Value       => 0);
          SK.Crash_Audit.Allocate (Audit => Audit);
          SK.Crash_Audit.Set_Reason

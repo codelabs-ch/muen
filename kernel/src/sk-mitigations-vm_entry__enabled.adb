@@ -18,6 +18,7 @@
 
 with SK.CPU;
 with SK.Mitigations.VM_Entry.IBPB;
+with SK.Mitigations.VM_Entry.L1D_Flush;
 with SK.Mitigations.VM_Entry.Verw;
 
 pragma $Release_Warnings
@@ -82,6 +83,7 @@ is
    is
    begin
       IBPB.Flush;
+      L1D_Flush.Flush;
       Verw.Clear;
    end Run;
 

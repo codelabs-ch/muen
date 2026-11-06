@@ -42,6 +42,7 @@ project Kernel is
    VM_Entry_Pkg := "";
    VM_Entry_Ibpb_Pkg := "";
    VM_Entry_Verw_Pkg := "";
+   VM_Entry_L1d_Flush_Pkg := "";
 
    case Build_Mode is
       when "debug" =>
@@ -125,12 +126,17 @@ project Kernel is
             when "True"  => VM_Entry_Verw_Pkg := "enabled";
             when "False" => VM_Entry_Verw_Pkg := "disabled";
          end case;
+         case Policy.VM_Entry_L1d_Flush_Enabled is
+            when "True"  => VM_Entry_L1d_Flush_Pkg := "enabled";
+            when "False" => VM_Entry_L1d_Flush_Pkg := "disabled";
+         end case;
       when "False" =>
-         MCU_Mitigations_Pkg := "disabled";
-         Mitigations_Pkg     := "disabled";
-         VM_Entry_Pkg        := "disabled";
-         VM_Entry_Ibpb_Pkg   := "disabled";
-         VM_Entry_Verw_Pkg   := "disabled";
+         MCU_Mitigations_Pkg    := "disabled";
+         Mitigations_Pkg        := "disabled";
+         VM_Entry_Pkg           := "disabled";
+         VM_Entry_Ibpb_Pkg      := "disabled";
+         VM_Entry_Verw_Pkg      := "disabled";
+         VM_Entry_L1d_Flush_Pkg := "disabled";
    end case;
 
    for Languages use ("Ada") & Extra_Languages;
@@ -170,6 +176,7 @@ project Kernel is
       for Body ("SK.Mitigations.VM_Entry") use "sk-mitigations-vm_entry__" & VM_Entry_Pkg & ".adb";
       for Body ("SK.Mitigations.VM_Entry.IBPB") use "sk-mitigations-vm_entry-ibpb__" & VM_Entry_Ibpb_Pkg & ".adb";
       for Body ("SK.Mitigations.VM_Entry.Verw") use "sk-mitigations-vm_entry-verw__" & VM_Entry_Verw_Pkg & ".adb";
+      for Body ("SK.Mitigations.VM_Entry.L1D_Flush") use "sk-mitigations-vm_entry-l1d_flush__" & VM_Entry_L1d_Flush_Pkg & ".adb";
    end Naming;
 
 end Kernel;

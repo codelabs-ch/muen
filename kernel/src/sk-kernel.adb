@@ -912,8 +912,9 @@ is
 
       --D @Text Section => impl_exit_handler
       --D If the next subject is in a different scheduling partition, the
-      --D VM-entry mitigation primitives (currently IBPB) are executed to
-      --D flush the branch predictor state of the previous subject.
+      --D VM-entry mitigation primitives (IBPB, L1D flush, VERW) are
+      --D executed to clear the branch predictor, L1D and fill-buffer state
+      --D of the previous subject.
       Next_Partition := Skp.Scheduling.Get_Scheduling_Partition_ID
         (Subject_ID => Current_Subject);
       if Previous_Partition /= Next_Partition then

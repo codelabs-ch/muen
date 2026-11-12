@@ -32,6 +32,7 @@ with SK.Mitigations.MCU;
 with SK.Mitigations.VM_Entry;
 with SK.Mitigations.VM_Entry.IBPB;
 with SK.Mitigations.VM_Entry.L1D_Flush;
+with SK.Mitigations.VM_Exit;
 with SK.Mitigations.VM_Entry.Verw;
 with Skp.MCU;
 
@@ -190,6 +191,9 @@ is
 
       --  Fail closed if the CPU does not support the L1D flush (FLUSH_L1D).
       Mitigations.VM_Entry.L1D_Flush.Check;
+
+      --  Fail closed if the CPU does not support the legacy IBRS re-assert.
+      Mitigations.VM_Exit.Check;
    end Process;
 
 end SK.MCU;

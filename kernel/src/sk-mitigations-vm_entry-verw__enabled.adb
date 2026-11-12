@@ -20,6 +20,7 @@ with System.Machine_Code;
 
 with SK.Constants;
 with SK.Crash_Audit_Types;
+with SK.Mitigations.Cpuid;
 
 package body SK.Mitigations.VM_Entry.Verw
 with
@@ -46,7 +47,7 @@ is
    is
    begin
       --  CPUID.07H.00H:EDX[10] = MD_CLEAR, see SDM Vol. 2 CPUID leaf 7.
-      Check_Cpuid_Feature
+      SK.Mitigations.Cpuid.Check_Cpuid_Feature
         (Subleaf => 0,
          Bit     => 10,
          Reason  => SK.Crash_Audit_Types.Mitigations_Cpuid_Md_Clear);

@@ -31,9 +31,6 @@
 #if defined (SK_MIT_BHI_DIS_S)
 #error "bhiDisS selected but not implemented in the kernel"
 #endif
-#if defined (SK_MIT_IBRS_LEGACY)
-#error "ibrsLegacy selected but not implemented in the kernel"
-#endif
 #if defined (SK_MIT_RSB_STUFFING_SINGLECALL)
 #error "rsbStuffing singleCall selected but not implemented in the kernel"
 #endif
@@ -93,11 +90,41 @@
 .endm
 
 /*
+ * Legacy IBRS re-assert. Legacy IBRS is not sticky across the guest's
+ * execution, so IA32_SPEC_CTRL.IBRS must be set again before the first
+ * indirect branch of the exit path. Mirrors RESTORE_HOST_SPEC_CTRL_BODY /
+ * vmx_spec_ctrl_restore_host(), arch/x86/kvm/vmx/{vmenter.S,vmx.c}, Linux
+ * master f47d223627f8 (2026-10-19): on legacy-IBRS CPUs the host value is
+ * written unconditionally, regardless of the guest's value. The host value
+ * is IBRS = 1, SSBD = 0 (IA32_SPEC_CTRL = 1), see SDM Vol. 4, Table 2-2,
+ * MSR 0x48.
+ *
+ * The preamble may only use r15 (saved by the caller) and rsp; the other
+ * GPRs still hold guest state, hence the save/restore of rax/rdx/rcx
+ * around the WRMSR.
+ */
+.macro set_ibrs
+	push %rax
+	push %rdx
+	push %rcx
+	mov $0x48, %ecx
+	mov $1, %eax
+	xor %edx, %edx
+	wrmsr
+	pop %rcx
+	pop %rdx
+	pop %rax
+.endm
+
+/*
  * Mitigation preamble of the VM-exit path, invoked once at the top of
  * vmx_exit_handler before any RET of the exit path. A primitive is compiled
  * in iff its selection define is present.
  */
 .macro vmx_exit_mitigations_preamble
+#if defined (SK_MIT_IBRS_LEGACY)
+	set_ibrs
+#endif
 #if defined (SK_MIT_RSB_STUFFING_FULLFILL32)
 	fill_return_buffer
 #endif

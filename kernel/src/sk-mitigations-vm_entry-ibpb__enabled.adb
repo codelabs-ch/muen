@@ -18,6 +18,7 @@
 
 with SK.CPU;
 with SK.Crash_Audit_Types;
+with SK.Mitigations.Cpuid;
 
 package body SK.Mitigations.VM_Entry.IBPB
 is
@@ -47,10 +48,10 @@ is
    is
    begin
       --  CPUID.07H.00H:EDX[26] = IBPB support, see SDM Vol. 2 CPUID leaf 7.
-      Check_Cpuid_Feature
+      SK.Mitigations.Cpuid.Check_Cpuid_Feature
         (Subleaf => 0,
          Bit     => 26,
-         Reason  => SK.Crash_Audit_Types.Mitigations_Cpuid_Ibpb);
+         Reason  => SK.Crash_Audit_Types.Mitigations_Cpuid_Ibrs_Ipbp);
    end Check;
 
 end SK.Mitigations.VM_Entry.IBPB;

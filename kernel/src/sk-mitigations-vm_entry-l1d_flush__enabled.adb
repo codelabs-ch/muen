@@ -18,6 +18,7 @@
 
 with SK.CPU;
 with SK.Crash_Audit_Types;
+with SK.Mitigations.Cpuid;
 
 package body SK.Mitigations.VM_Entry.L1D_Flush
 is
@@ -49,7 +50,7 @@ is
    is
    begin
       --  CPUID.07H.00H:EDX[28] = FLUSH_L1D, see SDM Vol. 2 CPUID leaf 7.
-      Check_Cpuid_Feature
+      SK.Mitigations.Cpuid.Check_Cpuid_Feature
         (Subleaf => 0,
          Bit     => 28,
          Reason  => SK.Crash_Audit_Types.Mitigations_Cpuid_L1d_Flush);

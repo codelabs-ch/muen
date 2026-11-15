@@ -70,7 +70,6 @@ is
       No_Return
    is
       use type Crash_Audit_Types.Subj_Context_Type;
-      use type Crash_Audit_Types.MCE_Context_Type;
 
       A : Crash_Audit.Entry_Type;
    begin
@@ -83,7 +82,13 @@ is
            (Audit   => A,
             Context => Subj_Ctx);
       end if;
-      if MCE_Ctx /= Crash_Audit_Types.Null_MCE_Context then
+
+      --  Check reason instead of inequality to Null_MCE_Context to avoid
+      --  violation of No_Implicit_Loops restriction.
+
+      if Reason = Crash_Audit_Types.Hardware_VMexit_MCE
+        or else Reason = Crash_Audit_Types.Hardware_VMentry_MCE
+      then
          Crash_Audit.Set_MCE_Context
            (Audit   => A,
             Context => MCE_Ctx);

@@ -84,41 +84,57 @@ is
 
    procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
    is
-      use type Crash_Audit_Types.Bank_Index_Ext_Range;
+      use Crash_Audit_Types;
 
-      Value : Word64;
+      Value      : Word64;
+      Reg_Offset : Word32;
+      Count      : MCE_Record_Count_Type := 0;
    begin
-      Ctx := Crash_Audit_Types.Null_MCE_Context;
-      Ctx.Bank_Count := Crash_Audit_Types.Bank_Index_Ext_Range (Bank_Count);
+      Ctx := Null_MCE_Context;
+      Ctx.Bank_Count := MCE_Bank_Count_Type (Bank_Count);
 
       Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
 
-      for I in 1 .. Ctx.Bank_Count loop
-         Value := CPU.Get_MSR64
-           (Register =>
-              Word32 (Constants.IA32_MC0_STATUS + (Integer (I) - 1) * 4));
-         if Bitops.Bit_Test
-           (Value => Value,
-            Pos   => Constants.MCi_STATUS_Bit_Valid)
-         then
-            Ctx.MCi_Status (I - 1) := Value;
+      --  Uncorrected errors first, then the remaining valid banks.
+
+      for Uncorrected in reverse Boolean loop
+         for I in MCE_Bank_Index_Type loop
+            exit when I >= MCE_Bank_Count_Type (Bank_Count);
+            Reg_Offset := Word32 (I) * 4;
+            Value := CPU.Get_MSR64
+              (Register => Constants.IA32_MC0_STATUS + Reg_Offset);
             if Bitops.Bit_Test
               (Value => Value,
-               Pos   => Constants.MCi_STATUS_Bit_Addrv)
+               Pos   => Constants.MCi_STATUS_Bit_Valid)
+              and then
+                (if Uncorrected
+                 then Bitops.Bit_Test
+                   (Value => Value,
+                    Pos   => Constants.MCi_STATUS_Bit_UC)
+                 else not Ctx.Valid_Banks (I))
             then
-               Ctx.MCi_Addr (I - 1) := CPU.Get_MSR64
-                 (Register =>
-                    Word32 (Constants.IA32_MC0_ADDR + (Integer (I) - 1) * 4));
+               Ctx.Valid_Banks (I) := True;
+               if Count < MCE_Max_Bank_Records then
+                  Count := Count + 1;
+                  Ctx.Banks (Count).Bank       := I;
+                  Ctx.Banks (Count).MCi_Status := Value;
+                  if Bitops.Bit_Test
+                    (Value => Value,
+                     Pos   => Constants.MCi_STATUS_Bit_Addrv)
+                  then
+                     Ctx.Banks (Count).MCi_Addr := CPU.Get_MSR64
+                       (Register => Constants.IA32_MC0_ADDR + Reg_Offset);
+                  end if;
+                  if Bitops.Bit_Test
+                    (Value => Value,
+                     Pos   => Constants.MCi_STATUS_Bit_Miscv)
+                  then
+                     Ctx.Banks (Count).MCi_Misc := CPU.Get_MSR64
+                       (Register => Constants.IA32_MC0_MISC + Reg_Offset);
+                  end if;
+               end if;
             end if;
-            if Bitops.Bit_Test
-              (Value => Value,
-               Pos   => Constants.MCi_STATUS_Bit_Miscv)
-            then
-               Ctx.MCi_Misc (I - 1) := CPU.Get_MSR64
-                 (Register =>
-                    Word32 (Constants.IA32_MC0_MISC + (Integer (I) - 1) * 4));
-            end if;
-         end if;
+         end loop;
       end loop;
    end Create_Context;
 

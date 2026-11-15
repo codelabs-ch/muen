@@ -57,7 +57,7 @@ is
       Pre    => Valid_State;
 
    --  Return True if the number of banks is bounded by
-   --  Crash_Audit_Types.MCE_Max_Banks.
+   --  Crash_Audit_Types.MCE_Max_HW_Banks.
    function Valid_State return Boolean
    with
       Ghost;
@@ -69,6 +69,6 @@ private
       Part_Of => State;
 
    function Valid_State return Boolean
-   is (Bank_Count <= Crash_Audit_Types.MCE_Max_Banks);
+   is (Bank_Count <= Crash_Audit_Types.MCE_Max_HW_Banks);
 
 end SK.MCE;

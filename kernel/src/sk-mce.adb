@@ -71,7 +71,7 @@ is
               (Word32'Mod
                    (CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP)))));
 
-      Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_Banks;
+      Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_HW_Banks;
       pragma Debug
         (not Ctx.Bank_Count_OK,
          Dump.Print_Message (Msg => "Init: Unsupported number of MCE banks "
